@@ -1,120 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#080b18" id="themeColorMeta">
-  <title>Morning Protocol</title>
-  <style>
-    :root { color-scheme: dark; --accent:#9caeff; --dim:#a5add0; --panel:#0a0d1c; --edge:#38436e; --glow:#7c8cff12; --bg:#080b18; --card:#0c1021; --text:#e7eaff; --muted:#b6bedf; }
-    * { box-sizing:border-box; }
-    body { margin:0; min-height:100vh; background:radial-gradient(ellipse at top,var(--card) 0%,var(--bg) 60%); color:var(--text); font:16px/1.6 Consolas,Monaco,"Courier New",monospace; display:grid; place-items:center; padding:24px; }
-    main { width:min(720px,100%); border:1px solid var(--edge); background:var(--bg); box-shadow:0 0 35px var(--glow); }
-    header { padding:14px 20px; border-bottom:1px solid var(--edge); display:flex; justify-content:space-between; gap:12px; color:var(--dim); font-size:12px; letter-spacing:.12em; }
-    .dot { color:var(--accent); }
-    section { padding:clamp(22px,5vw,42px); }
-    .eyebrow { color:var(--accent); font-size:12px; letter-spacing:.18em; }
-    h1 { font-size:clamp(30px,7vw,48px); line-height:1.1; margin:12px 0; color:var(--text); }
-    p { color:var(--muted); }
-    .rule { border:0; border-top:1px dashed #28583b; margin:26px 0; }
-    .terminal { background:var(--card); border:1px solid var(--edge); padding:18px; margin:20px 0; }
-    .question { color:var(--text); margin:0 0 12px; }
-    .choices { display:grid; gap:10px; }
-    button, select { font:inherit; cursor:pointer; color:var(--accent); background:var(--card); border:1px solid var(--edge); padding:10px 12px; text-align:left; transition:.15s ease; }
-    button:hover,button:focus-visible,select:focus-visible { background:var(--card); border-color:var(--accent); outline:none; }
-    button:disabled { opacity:.55; cursor:default; }
-    input { width:100%; padding:12px; margin-top:8px; color:var(--accent); background:var(--bg); border:1px solid var(--edge); font:inherit; }
-    .status { min-height:26px; color:var(--accent); font-size:13px; margin-top:12px; }
-    .hidden { display:none; }
-    .message { border:1px solid var(--edge); padding:22px; background:var(--card); white-space:pre-wrap; }
-    .message h2 { color:var(--accent); margin-top:0; }
-    .small { font-size:12px; color:#789582; }
-    footer { padding:12px 20px; border-top:1px solid var(--edge); color:var(--dim); font-size:11px; display:flex; justify-content:space-between; gap:10px; }\n    .theme-bar { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin:0 0 22px; padding:12px; border:1px solid var(--edge); background:var(--card); font-size:12px; }\n    .theme-bar label { color:var(--dim); }
-    @media(max-width:480px) { header,footer { flex-wrap:wrap; } }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080b18" id="themeColorMeta">
+<title>Morning Protocol — The Lost Signal</title>
+<style>
+:root{color-scheme:dark;--accent:#b8a5ff;--dim:#b3acd5;--edge:#514276;--glow:#9b7dff1c;--bg:#0b0918;--card:#151027;--text:#f0eaff;--muted:#c9c0e6}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at top,var(--card),var(--bg) 65%);color:var(--text);font:16px/1.55 Consolas,Monaco,"Courier New",monospace;display:grid;place-items:center;padding:18px}
+main{width:min(760px,100%);border:1px solid var(--edge);background:var(--bg);box-shadow:0 0 35px var(--glow)}
+header,footer{padding:13px 18px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--dim);font-size:12px;letter-spacing:.08em}
+header{border-bottom:1px solid var(--edge)}footer{border-top:1px solid var(--edge)}
+.dot,.eyebrow,.status{color:var(--accent)}
+section{padding:clamp(18px,4vw,36px)}
+.eyebrow{font-size:12px;letter-spacing:.15em}
+h1{font-size:clamp(30px,7vw,46px);line-height:1.1;margin:12px 0}
+p{color:var(--muted)}
+.theme-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:24px;padding:12px;border:1px solid var(--edge);background:var(--card);font-size:12px}
+button,select{font:inherit;cursor:pointer;color:var(--accent);background:var(--card);border:1px solid var(--edge);padding:10px 12px}
+button:hover,button:focus-visible,select:focus-visible{border-color:var(--accent);outline:2px solid transparent;filter:brightness(1.18)}
+button:disabled{opacity:.5;cursor:default}
+.panel{background:var(--card);border:1px solid var(--edge);padding:16px;margin:18px 0}
+.game-info{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--dim)}
+#maze{display:grid;grid-template-columns:repeat(15,minmax(0,1fr));gap:3px;margin:16px auto;max-width:510px;touch-action:manipulation}
+.cell{aspect-ratio:1;border:1px solid var(--edge);background:var(--bg);display:grid;place-items:center;font-size:clamp(10px,2.6vw,18px);min-width:0;padding:0}
+.cell.wall{background:var(--edge);border-color:var(--edge)}
+.cell.player{color:var(--accent);background:var(--card);box-shadow:inset 0 0 0 1px var(--accent)}
+.cell.key{color:#ffe38a}.cell.exit{color:#8effc2}
+.controls{display:grid;grid-template-columns:repeat(3,52px);grid-template-rows:repeat(2,44px);justify-content:center;gap:6px;margin:12px auto}
+.controls button{text-align:center;padding:4px}
+.controls .up{grid-column:2}.controls .left{grid-column:1;grid-row:2}.controls .down{grid-column:2;grid-row:2}.controls .right{grid-column:3;grid-row:2}
+.status{min-height:24px;font-size:13px}
+.hidden{display:none!important}
+.message{border:1px solid var(--edge);padding:20px;background:var(--card);white-space:pre-wrap}
+.message h2{color:var(--accent);margin-top:0}
+.small{font-size:12px;color:var(--dim)}
+@media(min-width:600px){.game-layout{display:grid;grid-template-columns:1fr 170px;gap:18px;align-items:center}.controls{margin:14px auto}}
+</style>
 </head>
 <body>
 <main>
-  <header><span><span class="dot">●</span> MORNING-PROTOCOL v1.0</span><span id="clock">SYSTEM ONLINE</span></header>
-  <section>
-    <div class="theme-bar"><label for="themePicker">DAILY COLOR THEME <span id="themeDay"></span></label><select id="themePicker" aria-label="Choose website color theme"><option value="auto">Auto: change daily</option><option value="lavender">Midnight Lavender</option><option value="ocean">Deep Ocean</option><option value="rose">Rose Quartz</option><option value="sunset">Amber Sunset</option><option value="mint">Mint Glow</option></select></div>\n    <div class="eyebrow">[ PRIVATE TRANSMISSION / ACCESS REQUIRED ]</div>
-    <h1>A message is waiting.</h1>
-    <p>Good morning, Agent. A little message has been locked behind a tiny mystery. Solve the clues to open the transmission.</p>
-    <div class="terminal" id="puzzle">
-      <div class="eyebrow" id="stage">CASE FILE 01 / 03</div>
-      <p class="question" id="question">A message can travel without feet, and arrive without moving. What carries it?</p>
-      <div class="choices" id="choices">
-        <button data-answer="wind">A. The wind</button>
-        <button data-answer="signal">B. A signal</button>
-        <button data-answer="shadow">C. A shadow</button>
-      </div>
-      <div class="status" id="status" aria-live="polite">> Awaiting your answer...</div>
-    </div>
-    <div id="unlock" class="hidden">
-      <div class="eyebrow">[ IDENTITY VERIFIED ]</div>
-      <p class="dot">> TRANSMISSION DECRYPTED</p>
-      <div class="message">
-        <h2 id="messageTitle">A little note for you</h2>
-        <div id="messageBody"></div>
-      </div>
-      <p class="small">Come back tomorrow for another little message. ✦</p>
-    </div>
-    <hr class="rule">
-    <p class="small">TIP: Read carefully. You can try again if you miss a clue. Your color theme can change every day, or you can choose one yourself.</p>
-  </section>
-  <footer><span>ENCRYPTION: HEARTWARE</span><span>STATUS: <span class="dot">● SECURE</span></span></footer>
+<header><span><span class="dot">●</span> MORNING-PROTOCOL v1.1</span><span id="clock">SYSTEM ONLINE</span></header>
+<section>
+<div class="theme-bar"><label for="themePicker">DAILY COLOR THEME <span id="themeDay"></span></label><select id="themePicker" aria-label="Choose website color theme"><option value="auto">Auto: change daily</option><option value="lavender">Midnight Lavender</option><option value="ocean">Deep Ocean</option><option value="rose">Rose Quartz</option><option value="sunset">Amber Sunset</option><option value="mint">Mint Glow</option></select></div>
+<div class="eyebrow">[ MINI ADVENTURE / SIGNAL LOST ]</div>
+<h1>The Lost Signal</h1>
+<p>Agent, the signal is trapped inside this maze. Find the <span class="dot">◆ key</span>, then reach the <span class="dot">▣ exit</span>. Only a successful escape will unlock your message.</p>
+<div class="panel">
+<div class="game-info"><span>KEY: <strong id="keyState">NOT FOUND</strong></span><span>MOVES: <strong id="moves">0</strong></span><span>MODE: NORMAL</span></div>
+<div class="game-layout">
+<div>
+<div id="maze" role="img" aria-label="Maze game grid"></div>
+<div class="status" id="status" aria-live="polite">> Use arrow keys or WASD to move. Find the key!</div>
+</div>
+<div>
+<p class="small">CONTROLS</p>
+<p class="small">Desktop: arrow keys or W A S D</p>
+<div class="controls" aria-label="Touch controls">
+<button class="up" data-move="0,-1" aria-label="Move up">▲</button>
+<button class="left" data-move="-1,0" aria-label="Move left">◀</button>
+<button class="down" data-move="0,1" aria-label="Move down">▼</button>
+<button class="right" data-move="1,0" aria-label="Move right">▶</button>
+</div>
+<button id="restart" style="width:100%;text-align:center">Restart maze</button>
+</div>
+</div>
+</div>
+<div id="unlock" class="hidden">
+<div class="eyebrow">[ SIGNAL RESTORED / ACCESS GRANTED ]</div>
+<p class="dot">> YOU MADE IT OUT.</p>
+<div class="message"><h2 id="messageTitle">A little note for you</h2><div id="messageBody"></div></div>
+<p class="small">Come back tomorrow for another little message. ✦</p>
+</div>
+<p class="small">TIP: Walls block your path. Collect the key before heading to the exit. Your color theme changes daily, or you can choose one yourself.</p>
+</section>
+<footer><span>ENCRYPTION: HEARTWARE</span><span>STATUS: <span class="dot">● SECURE</span></span></footer>
 </main>
 <script>
-  // COLOR THEMES: auto rotates daily. Choose a theme from the menu to override it.\n  const themes = {\n    lavender: {accent:"#b8a5ff",dim:"#b3acd5",edge:"#514276",glow:"#9b7dff1c",bg:"#0b0918",card:"#151027",text:"#f0eaff",muted:"#c9c0e6"},\n    ocean: {accent:"#69d9ff",dim:"#8ebdcc",edge:"#24546b",glow:"#33cfff18",bg:"#061019",card:"#0a1c29",text:"#e5f8ff",muted:"#b1d4e2"},\n    rose: {accent:"#ff9fcb",dim:"#c99ab3",edge:"#6d3453",glow:"#ff68b518",bg:"#180912",card:"#26101e",text:"#fff0f7",muted:"#e2b9ce"},\n    sunset: {accent:"#ffc078",dim:"#c9a989",edge:"#6d482a",glow:"#ff9d3b18",bg:"#170e08",card:"#27180d",text:"#fff4e7",muted:"#e4c6a7"},\n    mint: {accent:"#72ffd0",dim:"#91cbb7",edge:"#286650",glow:"#35ffbd18",bg:"#06130f",card:"#0b2119",text:"#e5fff5",muted:"#b5e3d2"}\n  };\n  const themeNames = Object.keys(themes);\n  function applyTheme(name) {\n    const chosen = name === "auto" ? themeNames[Math.floor((Date.now() - new Date(new Date().getFullYear(),0,0)) / 86400000) % themeNames.length] : name;\n    const t = themes[chosen] || themes.lavender;\n    for (const [key,value] of Object.entries(t)) document.documentElement.style.setProperty("--"+key,value);\n    document.getElementById("themeColorMeta").content = t.bg;\n    document.getElementById("themeDay").textContent = name === "auto" ? " / TODAY: " + chosen.toUpperCase() : " / CUSTOM";\n  }\n  const themePicker = document.getElementById("themePicker");\n  themePicker.addEventListener("change", () => applyTheme(themePicker.value));\n  applyTheme("auto");\n\n  // CUSTOMIZE YOUR MESSAGES HERE. Add or edit one message for each day of the year (1–365).
-  // The page selects a message based on the day of the year.
-  const dailyMessages = [
-    { title: "A little note for you", body: "Hey, you. 💚\n\nI hope today gives you a reason to smile, even if it is a small one. Take things one step at a time. You do not have to figure everything out all at once.\n\nDrink some water, take a breath, and remember that you matter. Have a gentle day." },
-    { title: "Today's reminder", body: "You are allowed to grow at your own pace. Progress does not have to be loud to be real.\n\nBe kind to yourself today. You are doing better than you think. ✦" },
-    { title: "Transmission received", body: "A small reminder from this side of the screen: I hope something unexpectedly good finds you today. You deserve moments of peace, laughter, and rest." }
-  ];
-  const puzzles = [
-    { q: "A message can travel without feet, and arrive without moving. What carries it?", options: [["wind","A. The wind"],["signal","B. A signal"],["shadow","C. A shadow"]], answer:"signal", hint:"Think of something sent from one device to another." },
-    { q: "I have keys but no locks, and space but no room. What am I?", options: [["keyboard","A. A keyboard"],["map","B. A map"],["piano","C. A piano"]], answer:"keyboard", hint:"You might be using one right now." },
-    { q: "The more you take from me, the bigger I become. What am I?", options: [["hole","A. A hole"],["secret","B. A secret"],["shadow","C. A shadow"]], answer:"hole", hint:"Imagine digging into the ground." }
-  ];
-  let stage = 0;
-  const question = document.getElementById("question");
-  const choices = document.getElementById("choices");
-  const status = document.getElementById("status");
-  const stageLabel = document.getElementById("stage");
-  function renderPuzzle() {
-    const p = puzzles[stage];
-    stageLabel.textContent = "CASE FILE " + String(stage + 1).padStart(2,"0") + " / " + String(puzzles.length).padStart(2,"0");
-    question.textContent = p.q;
-    choices.innerHTML = "";
-    p.options.forEach(([value,label]) => {
-      const b = document.createElement("button");
-      b.textContent = label;
-      b.addEventListener("click", () => checkAnswer(value));
-      choices.appendChild(b);
-    });
-    status.textContent = "> Awaiting your answer...";
-  }
-  function checkAnswer(value) {
-    if (value !== puzzles[stage].answer) {
-      status.textContent = "> ACCESS DENIED. " + puzzles[stage].hint;
-      return;
-    }
-    stage++;
-    if (stage < puzzles.length) {
-      status.textContent = "> Correct. Loading next case...";
-      renderPuzzle();
-    } else {
-      document.getElementById("puzzle").classList.add("hidden");
-      document.getElementById("unlock").classList.remove("hidden");
-      const day = Math.floor((new Date() - new Date(new Date().getFullYear(),0,0)) / 86400000);
-      const msg = dailyMessages[(day - 1) % dailyMessages.length];
-      document.getElementById("messageTitle").textContent = msg.title;
-      document.getElementById("messageBody").textContent = msg.body;
-    }
-  }
-  document.getElementById("clock").textContent = new Date().toLocaleDateString(undefined,{year:"numeric",month:"short",day:"2-digit"}).toUpperCase();
-  renderPuzzle();
+const themes={
+ lavender:{accent:"#b8a5ff",dim:"#b3acd5",edge:"#514276",glow:"#9b7dff1c",bg:"#0b0918",card:"#151027",text:"#f0eaff",muted:"#c9c0e6"},
+ ocean:{accent:"#69d9ff",dim:"#8ebdcc",edge:"#24546b",glow:"#33cfff18",bg:"#061019",card:"#0a1c29",text:"#e5f8ff",muted:"#b1d4e2"},
+ rose:{accent:"#ff9fcb",dim:"#c99ab3",edge:"#6d3453",glow:"#ff68b518",bg:"#180912",card:"#26101e",text:"#fff0f7",muted:"#e2b9ce"},
+ sunset:{accent:"#ffc078",dim:"#c9a989",edge:"#6d482a",glow:"#ff9d3b18",bg:"#170e08",card:"#27180d",text:"#fff4e7",muted:"#e4c6a7"},
+ mint:{accent:"#72ffd0",dim:"#91cbb7",edge:"#286650",glow:"#35ffbd18",bg:"#06130f",card:"#0b2119",text:"#e5fff5",muted:"#b5e3d2"}
+};
+const themeNames=Object.keys(themes);
+function applyTheme(name){
+ const day=Math.floor((Date.now()-new Date(new Date().getFullYear(),0,0))/86400000);
+ const chosen=name==="auto"?themeNames[day%themeNames.length]:name;
+ const t=themes[chosen]||themes.lavender;
+ Object.entries(t).forEach(([key,value])=>document.documentElement.style.setProperty("--"+key,value));
+ document.getElementById("themeColorMeta").content=t.bg;
+ document.getElementById("themeDay").textContent=name==="auto"?" / TODAY: "+chosen.toUpperCase():" / CUSTOM";
+}
+const themePicker=document.getElementById("themePicker");
+themePicker.addEventListener("change",()=>applyTheme(themePicker.value));
+applyTheme("auto");
+const dailyMessages=[
+ {title:"A little note for you",body:"Hey, you. 💚\n\nI hope today gives you a reason to smile, even if it is a small one. Take things one step at a time. You do not have to figure everything out all at once.\n\nDrink some water, take a breath, and remember that you matter. Have a gentle day."},
+ {title:"Today's reminder",body:"You are allowed to grow at your own pace. Progress does not have to be loud to be real.\n\nBe kind to yourself today. You are doing better than you think. ✦"},
+ {title:"Transmission received",body:"A small reminder from this side of the screen: I hope something unexpectedly good finds you today. You deserve moments of peace, laughter, and rest."}
+];
+const map=[
+"###############",
+"#P....#.......#",
+"###.#.#.#####.#",
+"#...#...#...#.#",
+"#.#####.#.#.#.#",
+"#.....#...#...#",
+"#.###.#####.###",
+"#...#.....#...#",
+"###.###.#.#.#.#",
+"#K....#...#...E",
+"###############"
+];
+// Player and key positions are represented by P and K in the map; exit E.
+const mazeEl=document.getElementById("maze");
+const statusEl=document.getElementById("status");
+let grid=[],player={x:1,y:1},key={x:1,y:9},exit={x:13,y:9},hasKey=false,moves=0,won=false;
+function resetGame(){
+ grid=map.map(row=>row.split(""));
+ player={x:1,y:1};key={x:1,y:9};exit={x:13,y:9};hasKey=false;moves=0;won=false;
+ document.getElementById("unlock").classList.add("hidden");
+ document.getElementById("keyState").textContent="NOT FOUND";
+ document.getElementById("moves").textContent="0";
+ statusEl.textContent="> Use arrow keys or WASD to move. Find the key!";
+ renderMaze();
+}
+function renderMaze(){
+ mazeEl.innerHTML="";
+ grid.forEach((row,y)=>row.forEach((cell,x)=>{
+  const tile=document.createElement("div");tile.className="cell";
+  if(cell==="#")tile.classList.add("wall");
+  if(x===player.x&&y===player.y){tile.classList.add("player");tile.textContent="●";}
+  else if(x===key.x&&y===key.y&&!hasKey){tile.classList.add("key");tile.textContent="◆";}
+  else if(x===exit.x&&y===exit.y){tile.classList.add("exit");tile.textContent="▣";}
+  else if(cell!=="#")tile.textContent="";
+  mazeEl.appendChild(tile);
+ }));
+}
+function move(dx,dy){
+ if(won)return;
+ const nx=player.x+dx,ny=player.y+dy;
+ if(ny<0||ny>=grid.length||nx<0||nx>=grid[ny].length||grid[ny][nx]==="#"){statusEl.textContent="> Wall detected. Find another route.";return;}
+ player={x:nx,y:ny};moves++;document.getElementById("moves").textContent=String(moves);
+ if(player.x===key.x&&player.y===key.y&&!hasKey){hasKey=true;document.getElementById("keyState").textContent="COLLECTED";statusEl.textContent="> Key acquired. Now find the exit!";}
+ else if(player.x===exit.x&&player.y===exit.y){
+  if(!hasKey){statusEl.textContent="> Exit locked. Find the ◆ key first!";}
+  else{winGame();return;}
+ }else{statusEl.textContent=hasKey?"> Key secured. Reach the ▣ exit!":"> Signal weak. Search for the ◆ key.";}
+ renderMaze();
+}
+function winGame(){
+ won=true;statusEl.textContent="> SIGNAL RESTORED. TRANSMISSION UNLOCKED.";
+ document.getElementById("unlock").classList.remove("hidden");
+ const day=Math.floor((new Date()-new Date(new Date().getFullYear(),0,0))/86400000);
+ const msg=dailyMessages[(day-1)%dailyMessages.length];
+ document.getElementById("messageTitle").textContent=msg.title;
+ document.getElementById("messageBody").textContent=msg.body;
+ renderMaze();
+}
+document.addEventListener("keydown",event=>{
+ const keys={ArrowUp:[0,-1],w:[0,-1],W:[0,-1],ArrowDown:[0,1],s:[0,1],S:[0,1],ArrowLeft:[-1,0],a:[-1,0],A:[-1,0],ArrowRight:[1,0],d:[1,0],D:[1,0]};
+ const moveBy=keys[event.key];if(moveBy){event.preventDefault();move(moveBy[0],moveBy[1]);}
+});
+document.querySelectorAll("[data-move]").forEach(button=>button.addEventListener("click",()=>{const [dx,dy]=button.dataset.move.split(",").map(Number);move(dx,dy);}));
+document.getElementById("restart").addEventListener("click",resetGame);
+document.getElementById("clock").textContent=new Date().toLocaleDateString(undefined,{year:"numeric",month:"short",day:"2-digit"}).toUpperCase();
+resetGame();
 </script>
 </body>
 </html>
