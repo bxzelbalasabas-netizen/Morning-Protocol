@@ -23,8 +23,8 @@ button:hover,button:focus-visible,select:focus-visible{border-color:var(--accent
 button:disabled{opacity:.5;cursor:default}
 .panel{background:var(--card);border:1px solid var(--edge);padding:16px;margin:18px 0}
 .game-info{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--dim)}
-#maze{display:grid;grid-template-columns:repeat(15,minmax(0,1fr));gap:3px;margin:16px auto;max-width:510px;touch-action:manipulation}
-.cell{aspect-ratio:1;border:1px solid var(--edge);background:var(--bg);display:grid;place-items:center;font-size:clamp(10px,2.6vw,18px);min-width:0;padding:0}
+#maze{display:grid;grid-template-columns:repeat(21,minmax(0,1fr));gap:3px;margin:16px auto;max-width:510px;touch-action:manipulation}
+.cell{aspect-ratio:1;border:1px solid var(--edge);background:var(--bg);display:grid;place-items:center;font-size:clamp(8px,2vw,15px);min-width:0;padding:0}
 .cell.wall{background:var(--edge);border-color:var(--edge)}
 .cell.player{color:var(--accent);background:var(--card);box-shadow:inset 0 0 0 1px var(--accent)}
 .cell.key{color:#ffe38a}.cell.exit{color:#8effc2}
@@ -46,9 +46,9 @@ button:disabled{opacity:.5;cursor:default}
 <div class="theme-bar"><label for="themePicker">DAILY COLOR THEME <span id="themeDay"></span></label><select id="themePicker" aria-label="Choose website color theme"><option value="auto">Auto: change daily</option><option value="lavender">Midnight Lavender</option><option value="ocean">Deep Ocean</option><option value="rose">Rose Quartz</option><option value="sunset">Amber Sunset</option><option value="mint">Mint Glow</option></select></div>
 <div class="eyebrow">[ MINI ADVENTURE / SIGNAL LOST ]</div>
 <h1>The Lost Signal</h1>
-<p>Agent, the signal is trapped inside this maze. Find the <span class="dot">◆ key</span>, then reach the <span class="dot">▣ exit</span>. Only a successful escape will unlock your message.</p>
+<p>Agent, the signal is buried deep inside a shifting maze. Find the <span class="dot">◆ key</span>, then reach the <span class="dot">▣ exit</span>. Visibility is limited, so explore carefully. Only a successful escape unlocks your message.</p>
 <div class="panel">
-<div class="game-info"><span>KEY: <strong id="keyState">NOT FOUND</strong></span><span>MOVES: <strong id="moves">0</strong></span><span>MODE: NORMAL</span></div>
+<div class="game-info"><span>KEY: <strong id="keyState">NOT FOUND</strong></span><span>MOVES: <strong id="moves">0</strong></span><span>MODE: HARD</span></div>
 <div class="game-layout">
 <div>
 <div id="maze" role="img" aria-label="Maze game grid"></div>
@@ -56,7 +56,7 @@ button:disabled{opacity:.5;cursor:default}
 </div>
 <div>
 <p class="small">CONTROLS</p>
-<p class="small">Desktop: arrow keys or W A S D</p>
+<p class="small">Desktop: arrow keys or W A S D</p><p class="small">Only nearby tiles are visible. The maze changes whenever you restart.</p>
 <div class="controls" aria-label="Touch controls">
 <button class="up" data-move="0,-1" aria-label="Move up">▲</button>
 <button class="left" data-move="-1,0" aria-label="Move left">◀</button>
@@ -73,7 +73,7 @@ button:disabled{opacity:.5;cursor:default}
 <div class="message"><h2 id="messageTitle">A little note for you</h2><div id="messageBody"></div></div>
 <p class="small">Come back tomorrow for another little message. ✦</p>
 </div>
-<p class="small">TIP: Walls block your path. Collect the key before heading to the exit. Your color theme changes daily, or you can choose one yourself.</p>
+<p class="small">TIP: The maze is different after each restart, and only nearby tiles are visible. Find the key and escape to unlock the message.</p>
 </section>
 <footer><span>ENCRYPTION: HEARTWARE</span><span>STATUS: <span class="dot">● SECURE</span></span></footer>
 </main>
@@ -102,54 +102,69 @@ const dailyMessages=[
  {title:"Today's reminder",body:"You are allowed to grow at your own pace. Progress does not have to be loud to be real.\n\nBe kind to yourself today. You are doing better than you think. ✦"},
  {title:"Transmission received",body:"A small reminder from this side of the screen: I hope something unexpectedly good finds you today. You deserve moments of peace, laughter, and rest."}
 ];
-const map=[
-"###############",
-"#P....#.......#",
-"###.#.#.#####.#",
-"#...#...#...#.#",
-"#.#####.#.#.#.#",
-"#.....#...#...#",
-"#.###.#####.###",
-"#...#.....#...#",
-"###.###.#.#.#.#",
-"#K....#...#...E",
-"###############"
-];
-// Player and key positions are represented by P and K in the map; exit E.
+const WIDTH=21,HEIGHT=15;
 const mazeEl=document.getElementById("maze");
 const statusEl=document.getElementById("status");
-let grid=[],player={x:1,y:1},key={x:1,y:9},exit={x:13,y:9},hasKey=false,moves=0,won=false;
+let grid=[],player={x:1,y:1},key={x:WIDTH-4,y:HEIGHT-2},exit={x:WIDTH-2,y:HEIGHT-2},hasKey=false,moves=0,won=false;
+function generateMaze(){
+ const cells=Array.from({length:HEIGHT},()=>Array(WIDTH).fill("#"));
+ for(let y=1;y<HEIGHT-1;y+=2)for(let x=1;x<WIDTH-1;x+=2)cells[y][x]=".";
+ const stack=[{x:1,y:1}];cells[1][1]=".";
+ while(stack.length){
+  const cur=stack[stack.length-1];
+  const opts=[[0,-2],[2,0],[0,2],[-2,0]].map(([dx,dy])=>({x:cur.x+dx,y:cur.y+dy,dx,dy})).filter(n=>n.x>0&&n.x<WIDTH-1&&n.y>0&&n.y<HEIGHT-1&&cells[n.y][n.x]==="#");
+  if(!opts.length){stack.pop();continue;}
+  const n=opts[Math.floor(Math.random()*opts.length)];
+  cells[cur.y+n.dy/2][cur.x+n.dx/2]=".";
+  cells[n.y][n.x]=".";
+  stack.push({x:n.x,y:n.y});
+ }
+ return cells;
+}
+function farthestFrom(start){
+ const queue=[{x:start.x,y:start.y,d:0}],seen=new Set([start.x+","+start.y]);let far=queue[0];
+ for(let i=0;i<queue.length;i++){
+  const p=queue[i];if(p.d>far.d)far=p;
+  for(const [dx,dy] of [[0,-1],[1,0],[0,1],[-1,0]]){
+   const x=p.x+dx,y=p.y+dy,k=x+","+y;
+   if(y>=0&&y<HEIGHT&&x>=0&&x<WIDTH&&grid[y][x]!=="#"&&!seen.has(k)){seen.add(k);queue.push({x,y,d:p.d+1});}
+  }
+ }
+ return far;
+}
 function resetGame(){
- grid=map.map(row=>row.split(""));
- player={x:1,y:1};key={x:1,y:9};exit={x:13,y:9};hasKey=false;moves=0;won=false;
+ grid=generateMaze();player={x:1,y:1};exit=farthestFrom(player);key=farthestFrom(exit);
+ if(key.x===exit.x&&key.y===exit.y)key=farthestFrom(player);
+ hasKey=false;moves=0;won=false;
  document.getElementById("unlock").classList.add("hidden");
  document.getElementById("keyState").textContent="NOT FOUND";
  document.getElementById("moves").textContent="0";
- statusEl.textContent="> Use arrow keys or WASD to move. Find the key!";
+ statusEl.textContent="> Fog active. Explore carefully and find the ◆ key.";
  renderMaze();
 }
 function renderMaze(){
  mazeEl.innerHTML="";
  grid.forEach((row,y)=>row.forEach((cell,x)=>{
   const tile=document.createElement("div");tile.className="cell";
-  if(cell==="#")tile.classList.add("wall");
-  if(x===player.x&&y===player.y){tile.classList.add("player");tile.textContent="●";}
-  else if(x===key.x&&y===key.y&&!hasKey){tile.classList.add("key");tile.textContent="◆";}
-  else if(x===exit.x&&y===exit.y){tile.classList.add("exit");tile.textContent="▣";}
-  else if(cell!=="#")tile.textContent="";
+  const visible=Math.abs(player.x-x)+Math.abs(player.y-y)<=2;
+  if(!visible){tile.style.visibility="hidden";tile.style.borderColor="transparent";tile.style.background="transparent";}
+  else if(cell==="#")tile.classList.add("wall");
+  if(visible&&x===player.x&&y===player.y){tile.classList.add("player");tile.textContent="●";}
+  else if(visible&&x===key.x&&y===key.y&&!hasKey){tile.classList.add("key");tile.textContent="◆";}
+  else if(visible&&x===exit.x&&y===exit.y){tile.classList.add("exit");tile.textContent="▣";}
   mazeEl.appendChild(tile);
  }));
 }
 function move(dx,dy){
  if(won)return;
  const nx=player.x+dx,ny=player.y+dy;
- if(ny<0||ny>=grid.length||nx<0||nx>=grid[ny].length||grid[ny][nx]==="#"){statusEl.textContent="> Wall detected. Find another route.";return;}
+ if(ny<0||ny>=HEIGHT||nx<0||nx>=WIDTH||grid[ny][nx]==="#"){statusEl.textContent="> Blocked. Try another path.";return;}
  player={x:nx,y:ny};moves++;document.getElementById("moves").textContent=String(moves);
- if(player.x===key.x&&player.y===key.y&&!hasKey){hasKey=true;document.getElementById("keyState").textContent="COLLECTED";statusEl.textContent="> Key acquired. Now find the exit!";}
+ if(player.x===key.x&&player.y===key.y&&!hasKey){hasKey=true;document.getElementById("keyState").textContent="COLLECTED";statusEl.textContent="> Key acquired. Find the exit through the fog!";}
  else if(player.x===exit.x&&player.y===exit.y){
   if(!hasKey){statusEl.textContent="> Exit locked. Find the ◆ key first!";}
   else{winGame();return;}
- }else{statusEl.textContent=hasKey?"> Key secured. Reach the ▣ exit!":"> Signal weak. Search for the ◆ key.";}
+ }else{statusEl.textContent=hasKey?"> Key secured. Keep exploring for the exit!":"> Fog obscures the route. Search for the ◆ key.";}
  renderMaze();
 }
 function winGame(){
