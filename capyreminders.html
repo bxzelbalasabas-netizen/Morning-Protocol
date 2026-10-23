@@ -16,7 +16,7 @@
 </style>
 </head>
 <body>
-<canvas id="world" aria-label="Cozy blocky world"></canvas><div class="shade"></div>
+<canvas id="world" aria-label="Cozy blocky world"></canvas><div class="shade"></div><img id="sweetpPortrait" alt="SweetP, the capybara with her orange and white glasses" src="SWEETP_IMAGE_PLACEHOLDER" draggable="false">
 <div class="topbar"><div class="brand">🍊 CapyReminders</div><div class="top-actions"><div class="volume">♫ <span>Music</span><input id="volume" type="range" min="0" max="1" step=".05" value=".25" aria-label="Music volume"></div><button class="pill" id="mute">♫ On</button></div></div>
 <div id="entry" class="panel"><div class="mascot-emoji">🧡🦫🍊</div><div class="kicker">a tiny world, just for you</div><h1>CapyReminders</h1><p>Somewhere soft to land, whenever you need it.</p><input id="passcode" class="passcode" type="password" placeholder="Passcode (optional)" aria-label="Optional passcode"><p class="tiny">Leave blank if you don't want a passcode.</p><button class="primary" id="enter">Tap to enter ♡</button><p class="sound-note">Sound begins after you enter. You can adjust or mute it anytime.</p></div>
 <div id="welcome" class="panel hidden"><div class="mascot-emoji">🍊</div><div class="welcome-line">WELCOME CAPYDADDY KEN</div><p>SweetP saved you a little place in her world.</p></div>
@@ -24,7 +24,7 @@
 <div id="messagePanel" class="panel hidden"><div class="kicker">a note picked just for you</div><h2 id="moodTitle">A little reminder</h2><div class="message-card" id="moodMessage"></div><div class="mascot-emoji" id="reaction">🦫💐</div><p id="gameSuggestion"></p><div class="button-row"><button class="primary" id="continueWorld">Let's explore ♡</button><button class="secondary" id="chooseMoodAgain">Change mood</button></div></div>
 <div id="speech" class="speech">SweetP is getting the world ready…</div><div class="hint" id="hint">WASD / arrows to walk</div>
 <div class="stick-zone" id="stick"><div class="stick-knob" id="knob"></div></div>
-<div class="hud" id="hud" hidden><button id="moodBtn">♡ Mood</button><button id="noteBtn">💌 Reminder</button><button id="danceBtn">♡ SweetP reaction</button><button id="skyBtn">☼ Sky: auto</button></div>
+<div class="hud" id="hud" hidden><button id="moodBtn">♡ Mood</button><button id="noteBtn">💌 Reminder</button><button id="danceBtn">♡ SweetP reaction</button><button id="petBtn">🤍 Pet SweetP</button><button id="tummyBtn">🫶 Tummy rub</button><button id="complimentBtn">🌷 Compliment</button><button id="hugBtn">🫂 Hug</button><button id="adminBtn">⚙️ Creator settings</button><button id="skyBtn">☼ Sky: auto</button></div>
 <script>
 /* ==================== AUDIO: replace these local filenames with your files ==================== */
 const AUDIO = {
@@ -131,7 +131,7 @@ function todayIndex(){const d=new Date();return Math.floor((Date.UTC(d.getFullYe
 function timeMood(){const h=new Date().getHours();if(h>=5&&h<12)return {label:"Good morning",audio:"goodMorning",night:false};if(h>=12&&h<18)return {label:"Good afternoon",audio:"goodAfternoon",night:false};if(h>=18&&h<22)return {label:"Good evening",audio:"goodEvening",night:false};return {label:"Good night",audio:"goodNight",night:true};}
 let currentMood=null,currentMessage="",entered=false,manualSky=false,skyMode="auto",musicMuted=false,musicVolume=.25,audioUnlocked=false;
 let activeAudio=null,musicAudio=null;
-function playVoice(key){if(!audioUnlocked)return;const file=AUDIO[key];if(!file)return;try{if(activeAudio){activeAudio.pause();activeAudio.currentTime=0;}activeAudio=new Audio(file);activeAudio.volume=musicMuted?0:Math.min(1,musicVolume===0?.65:.85);activeAudio.play().catch(()=>{});}catch(e){}}
+function playVoice(key){if(!audioUnlocked)return;const file=customVoices[key]||AUDIO[key];if(!file)return;try{if(activeAudio){activeAudio.pause();activeAudio.currentTime=0;}activeAudio=new Audio(file);activeAudio.volume=musicMuted?0:Math.min(1,musicVolume===0?.65:.85);activeAudio.play().catch(()=>{});}catch(e){}}
 function playMoodMusic(mood){if(!audioUnlocked)return;const key=mood==="Happy"?"happy":mood==="Bored"?"playful":mood==="Tired"?"night":mood==="Stressed"||mood==="Sad"||mood==="Missing someone"?"calm":"cozy";try{if(musicAudio){musicAudio.pause();musicAudio.currentTime=0;}musicAudio=new Audio(MUSIC[key]||MUSIC.cozy);musicAudio.loop=true;musicAudio.volume=musicMuted?0:musicVolume;musicAudio.play().catch(()=>{});}catch(e){}}
 function speak(text){const box=document.getElementById("speech");box.textContent=text;try{if("speechSynthesis"in window){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.rate=.91;u.pitch=1.15;u.volume=musicMuted?0:Math.max(.2,musicVolume);window.speechSynthesis.speak(u);}}catch(e){}}
 function sayTimeGreeting(){const t=timeMood();setSky(t.night?"night":t.label==="Good morning"?"morning":t.label==="Good afternoon"?"day":"evening");speak(t.label+", Capydaddy Ken. SweetP is happy you're here.");playVoice(t.audio);if(t.night){document.body.classList.add("night");}else document.body.classList.remove("night");}
@@ -149,6 +149,9 @@ document.getElementById("enter").addEventListener("click",()=>{
 });
 /* Optional gate: leave empty for no passcode. */
 const PASSCODE="";
+/* Change this PIN before sharing. Static-site PINs are a convenience gate, not secure authentication. */
+const ADMIN_PIN="sweetp-change-this";
+const customVoices={};
 document.getElementById("continueWorld").addEventListener("click",()=>{showPanel(null);document.getElementById("hud").hidden=false;document.getElementById("speech").style.display="block";speak("I'm right here, hon. Let's take it easy.");});
 document.getElementById("chooseMoodAgain").addEventListener("click",chooseMoodAgain);
 document.getElementById("moodBtn").addEventListener("click",()=>{showPanel("moodPanel");speak("How are you feeling right now, hon?");playVoice("howAreYou");});
@@ -231,7 +234,7 @@ function makeWorld(){
  for(let i=0;i<44;i++){const x=Math.random()*44-22,z=Math.random()*40-20;if(z<-10&&z>-5)continue;const f=group(scene,x,0,z);cube(f,0,.15,0,.06,.3,.06,0x4c8d4e);sphere(f,0,.34,0,.12,.12,.12,[0xf6b6c4,0xffe6a1,0xffffff,0xe5a9d1][i%4],8);}
  for(let i=0;i<8;i++){const cloud=group(scene,Math.random()*30-15,5+Math.random()*2,Math.random()*24-12);sphere(cloud,0,0,0,1.4,.35,.7,0xfff8e9,8);sphere(cloud,.8,.08,0,.8,.3,.6,0xfff8e9,8);sphere(cloud,-.7,.03,.08,.75,.28,.6,0xfff8e9,8);clouds.push(cloud);}
  player=group(scene,0,0,4);sphere(player,0,.62,0,.34,.42,.3,0x8a654c);sphere(player,0,1.02,.03,.29,.29,.27,0x9a7357);sphere(player,-.11,1.06,.25,.04,.04,.03,0x33251e);sphere(player,.11,1.06,.25,.04,.04,.03,0x33251e);
- sweetP=makeSweetP();dressSweetP(todayIndex()%OUTFITS.length);
+ sweetP=makeSweetP();sweetP.visible=false;dressSweetP(todayIndex()%OUTFITS.length);
  worldReady=true;setSky(timeMood().night?"night":timeMood().label==="Good morning"?"morning":timeMood().label==="Good afternoon"?"day":"evening");
 }
 function setSky(mode){if(!scene)return;skyMode=mode;const presets={morning:{sky:0xf6c7a8,ground:0x85b77e,light:1.25,fog:0xf2cdb2},day:{sky:0x9edcf0,ground:0x91c981,light:1.7,fog:0xcde7d7},evening:{sky:0xefad91,ground:0x729d70,light:.85,fog:0xf0c2a4},night:{sky:0x171f42,ground:0x496b63,light:.45,fog:0x202949}};const p=presets[mode]||presets.day;scene.background=new THREE.Color(p.sky);scene.fog.color.setHex(p.fog);scene.userData.sun.intensity=p.light;scene.children.forEach(o=>{if(o.isHemisphereLight)o.intensity=mode==="night"?.42:mode==="day"?.95:.75;});document.getElementById("skyBtn").textContent="☼ Sky: "+mode;}
