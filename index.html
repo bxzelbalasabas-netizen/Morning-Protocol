@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#080b18" id="themeColorMeta">
-<title>Morning Protocol — The Lost Signal</title>
+<title>Daily Protocol — Daily Signal</title>
 <style>
 :root{color-scheme:dark;--accent:#b8a5ff;--dim:#b3acd5;--edge:#514276;--glow:#9b7dff1c;--bg:#0b0918;--card:#151027;--text:#f0eaff;--muted:#c9c0e6}
 *{box-sizing:border-box}
 body{margin:0;min-height:100vh;background:radial-gradient(ellipse at top,var(--card),var(--bg) 65%);color:var(--text);font:16px/1.55 Consolas,Monaco,"Courier New",monospace;display:grid;place-items:center;padding:18px}
-main{width:min(760px,100%);border:1px solid var(--edge);background:var(--bg);box-shadow:0 0 35px var(--glow)}
+main{width:min(900px,100%);min-width:0;border:1px solid var(--edge);background:var(--bg);box-shadow:0 0 35px var(--glow)}
 header,footer{padding:13px 18px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--dim);font-size:12px;letter-spacing:.08em}
 header{border-bottom:1px solid var(--edge)}footer{border-top:1px solid var(--edge)}
 .dot,.eyebrow,.status{color:var(--accent)}
@@ -23,8 +23,8 @@ button:hover,button:focus-visible,select:focus-visible{border-color:var(--accent
 button:disabled{opacity:.5;cursor:default}
 .panel{background:var(--card);border:1px solid var(--edge);padding:16px;margin:18px 0}
 .game-info{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--dim)}
-#maze{display:grid;grid-template-columns:repeat(21,minmax(0,1fr));gap:3px;margin:16px auto;max-width:510px;touch-action:manipulation}
-.cell{aspect-ratio:1;border:1px solid var(--edge);background:var(--bg);display:grid;place-items:center;font-size:clamp(8px,2vw,15px);min-width:0;padding:0}
+#maze{display:grid;width:100%;min-width:0;grid-template-columns:repeat(21,minmax(0,1fr));gap:3px;margin:16px auto;max-width:510px;touch-action:manipulation}
+.cell{aspect-ratio:1;min-width:0;min-height:10px;border:1px solid var(--edge);background:var(--bg);display:grid;place-items:center;font-size:clamp(8px,2vw,15px);padding:0}
 .cell.wall{background:var(--edge);border-color:var(--edge)}
 .cell.player{color:var(--accent);background:var(--card);box-shadow:inset 0 0 0 1px var(--accent)}
 .cell.key{color:#ffe38a}.cell.exit{color:#8effc2}
@@ -45,12 +45,12 @@ button:disabled{opacity:.5;cursor:default}
 </head>
 <body>
 <main>
-<header><span><span class="dot">●</span> MORNING-PROTOCOL v1.1</span><span id="clock">SYSTEM ONLINE</span></header>
+<header><span><span class="dot">●</span> DAILY-PROTOCOL v1.1</span><span id="clock">SYSTEM ONLINE</span></header>
 <section>
 <div class="theme-bar"><label for="themePicker">DAILY COLOR THEME <span id="themeDay"></span></label><select id="themePicker" aria-label="Choose website color theme"><option value="auto">Auto: change daily</option><option value="lavender">Midnight Lavender</option><option value="ocean">Deep Ocean</option><option value="rose">Rose Quartz</option><option value="sunset">Amber Sunset</option><option value="mint">Mint Glow</option></select></div>
 <div class="eyebrow">[ DAILY MINI-GAME / SIGNAL LOST ]</div>
 <h1 id="gameHeading">The Lost Signal</h1>
-<p id="gameDescription">Agent, the signal is buried deep inside a shifting maze. Find the <span class="dot">◆ key</span>, then reach the <span class="dot">▣ exit</span>. Only a win unlocks your message. The game changes daily.</p>
+<p id="gameDescription">Agent, the signal is buried deep inside a shifting maze. Find the <span class="dot">◆ key</span>, then reach the <span class="dot">▣ exit</span>. Only a win unlocks your message. The challenge changes daily.</p>
 <div class="panel">
 <div class="game-info"><span id="statOne">KEY: <strong id="keyState">NOT FOUND</strong></span><span id="statTwo">MOVES: <strong id="moves">0</strong></span><span>DAILY GAME: <strong id="modeName">MAZE</strong></span></div>
 <div class="game-layout">
@@ -77,7 +77,7 @@ button:disabled{opacity:.5;cursor:default}
 <div class="eyebrow">[ SIGNAL RESTORED / ACCESS GRANTED ]</div>
 <p class="dot">> YOU MADE IT OUT.</p>
 <div class="message"><h2 id="messageTitle">A little note for you</h2><div id="messageBody"></div></div>
-<p class="small">Come back tomorrow for another little message. ✦</p>
+<p class="small">Come back tomorrow for a new daily challenge. ✦</p>
 </div>
 <p class="small">TIP: The maze is different after each restart, and only nearby tiles are visible. Find the key and escape to unlock the message.</p>
 </section>
