@@ -2,254 +2,116 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#fff3df">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fff5e8">
 <title>CapyReminders ♡</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.128.0/three.min.js"></script>
 <style>
-:root{--cream:#fff7e9;--paper:#fffdf7;--tan:#d9a875;--brown:#674638;--pink:#f4c6c5;--green:#8dbb87;--ink:#594337;--shadow:0 12px 35px #7753371c}
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Nunito,system-ui,sans-serif;color:var(--ink);background:var(--cream)}button,input{font:inherit}button{border:0;cursor:pointer;touch-action:manipulation}button:focus-visible,input:focus-visible{outline:3px solid #bc8e65;outline-offset:3px}
-#world{position:fixed;inset:0;width:100%;height:100%;display:block;background:linear-gradient(#f8d9c2,#fbeed2 55%,#b5d3a1)}.shade{position:fixed;inset:0;pointer-events:none;background:linear-gradient(180deg,#fff3df1a 45%,#60412b24)}
-.topbar{position:fixed;top:env(safe-area-inset-top,0);left:0;right:0;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:14px clamp(12px,3vw,28px);z-index:5;pointer-events:none}.brand,.top-actions{pointer-events:auto}.brand{background:#fffaf0d9;border:1px solid #fff;border-radius:22px;padding:9px 15px;box-shadow:var(--shadow);font-weight:900;letter-spacing:.02em}.top-actions{display:flex;gap:8px;align-items:center}.pill,.volume{background:#fffaf0e8;color:var(--ink);border:1px solid #fff;border-radius:99px;padding:9px 13px;box-shadow:var(--shadow);font-size:13px;font-weight:800}.volume{display:flex;align-items:center;gap:7px}.volume input{width:76px;accent-color:#9c6f4e}.panel{position:fixed;z-index:6;left:50%;top:50%;transform:translate(-50%,-50%);width:min(560px,calc(100vw - 26px));max-height:min(86dvh,800px);overflow:auto;background:#fffaf0f2;backdrop-filter:blur(16px);border:2px solid #fff;border-radius:30px;padding:clamp(20px,4vw,34px);box-shadow:0 25px 80px #65432830;text-align:center}.panel.hidden{display:none}.kicker{text-transform:uppercase;letter-spacing:.15em;font-size:11px;font-weight:900;color:#a47a58}.panel h1{font-size:clamp(30px,7vw,48px);line-height:1.05;margin:12px 0;color:#6b4938}.panel h2{margin:8px 0 12px}.panel p{line-height:1.6}.mascot-emoji{font-size:70px;line-height:1.3;filter:drop-shadow(0 6px 3px #8b60331c)}.primary{background:#8dbb87;color:#fff;border-radius:17px;padding:14px 22px;font-weight:900;box-shadow:0 5px 0 #689565;transition:transform .15s}.primary:active{transform:translateY(3px);box-shadow:0 2px 0 #689565}.secondary{background:#fff0dd;color:#805b42;border:1px solid #efd9bd;border-radius:15px;padding:11px 16px;font-weight:800}.passcode{width:min(210px,100%);padding:12px;border:1px solid #e4cdb0;border-radius:13px;background:#fffdf7;text-align:center;margin:8px}.welcome-line{font-size:clamp(24px,6vw,42px);font-weight:1000;animation:bounce .7s both;color:#a96f49}@keyframes bounce{0%{transform:translateY(22px) scale(.8);opacity:0}65%{transform:translateY(-7px) scale(1.06);opacity:1}100%{transform:translateY(0) scale(1)}}.speech{position:fixed;z-index:4;left:50%;bottom:calc(112px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:min(450px,calc(100vw - 28px));background:#fffaf0f0;border:2px solid white;border-radius:22px;padding:13px 18px;text-align:center;box-shadow:var(--shadow);font-weight:800}.speech:after{content:"";position:absolute;bottom:-10px;left:50%;width:18px;height:18px;transform:translateX(-50%) rotate(45deg);background:#fffaf0f0;border-right:2px solid white;border-bottom:2px solid white}.hud{position:fixed;z-index:4;bottom:calc(14px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);width:min(680px,calc(100vw - 24px));display:flex;justify-content:center;gap:7px;flex-wrap:wrap}.hud button{background:#fffaf0e8;color:#76533c;border:1px solid #fff;border-radius:16px;padding:10px 14px;box-shadow:var(--shadow);font-size:13px;font-weight:900}.hud button.active{background:#8dbb87;color:white}.moods{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:18px 0}.mood{min-height:83px;background:#fff4e3;border:2px solid #f1dfc8;border-radius:18px;padding:10px 5px;color:#76513d;font-weight:900}.mood span{display:block;font-size:26px;margin-bottom:3px}.mood:active{transform:scale(.97)}.message-card{background:#fff2df;border-radius:22px;padding:18px;margin:15px 0;line-height:1.65;font-weight:700}.button-row{display:flex;justify-content:center;gap:9px;flex-wrap:wrap}.tiny{font-size:12px;color:#9b806b}.sound-note{font-size:12px;color:#9b806b}.stick-zone{position:fixed;z-index:3;left:18px;bottom:calc(90px + env(safe-area-inset-bottom,0px));width:108px;height:108px;border-radius:50%;background:#fffaf066;border:2px solid #ffffffad;display:none;touch-action:none}.stick-knob{position:absolute;width:42px;height:42px;left:31px;top:31px;border-radius:50%;background:#fffaf0e8;border:2px solid #fff;box-shadow:var(--shadow)}.hint{position:fixed;right:16px;bottom:calc(95px + env(safe-area-inset-bottom,0px));z-index:3;background:#fffaf0b8;padding:8px 11px;border-radius:14px;font-size:11px;font-weight:800;max-width:155px}.heart{position:fixed;z-index:8;pointer-events:none;animation:floatup 1.5s ease-out forwards;font-size:25px}@keyframes floatup{to{transform:translateY(-100px) rotate(20deg);opacity:0}}@media(max-width:600px){.volume span{display:none}.volume input{width:56px}.topbar{padding:10px}.brand{font-size:13px;padding:8px 11px}.hud{bottom:calc(10px + env(safe-area-inset-bottom,0px));gap:5px}.hud button{padding:10px 11px;font-size:12px}.speech{bottom:calc(100px + env(safe-area-inset-bottom,0px));font-size:14px}.stick-zone{display:block}.hint{right:10px;bottom:calc(105px + env(safe-area-inset-bottom,0px));max-width:125px}.moods{gap:6px}.mood{font-size:12px;min-height:76px}}
+:root{--cream:#fff5e8;--paper:#fffdf8;--tan:#d9ad7e;--brown:#684638;--pink:#f4cecb;--green:#8eaf7c;--ink:#594337;--line:#ecd8c0;--shadow:0 14px 38px #7753371c}
+*{box-sizing:border-box}html{min-height:100%;background:var(--cream)}body{margin:0;min-height:100vh;color:var(--ink);font-family:ui-rounded,"Trebuchet MS",system-ui,sans-serif;background:radial-gradient(circle at 12% 10%,#fffdf4 0 8%,transparent 30%),linear-gradient(180deg,#fff6e9,#f8e7d3 72%,#e2ebd7);overflow-x:hidden}button,input,select,textarea{font:inherit}button{cursor:pointer;touch-action:manipulation}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #b8865c;outline-offset:3px}.app{max-width:1060px;margin:auto;padding:16px 16px 42px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.brand{font-weight:1000;font-size:clamp(20px,4vw,28px);letter-spacing:-.04em}.brand span{color:#b87848}.top-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.chip,.btn,.navbtn{border:1px solid #fff;background:#fffaf0;color:var(--ink);border-radius:999px;padding:10px 14px;font-weight:800;box-shadow:0 4px 12px #7b56301a}.btn.primary{background:var(--green);color:white;border-color:var(--green);box-shadow:0 4px 0 #709164}.btn.primary:active{transform:translateY(2px);box-shadow:0 2px 0 #709164}.btn.soft{background:#fff0dc;border-color:#f1ddc5}.btn.small{padding:8px 11px;font-size:13px}.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:20px;align-items:center;padding:clamp(24px,5vw,52px) 0 20px}.hero-copy{padding:14px 0}.eyebrow{text-transform:uppercase;letter-spacing:.16em;font-size:11px;font-weight:1000;color:#a77d5c}.hero h1{font-size:clamp(38px,7vw,72px);line-height:.99;letter-spacing:-.06em;margin:12px 0;color:#6b4938}.hero p{line-height:1.7;max-width:490px;color:#856b57}.hero-card{min-height:285px;border:2px solid #fff;border-radius:34px;background:linear-gradient(155deg,#fffaf0d9,#f8dfc9);box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:22px;position:relative;overflow:hidden}.hero-card:before,.hero-card:after{content:"";position:absolute;border-radius:50%;background:#ffffff50}.hero-card:before{width:180px;height:180px;top:-90px;right:-40px}.hero-card:after{width:140px;height:140px;bottom:-70px;left:-40px}.mascot{width:min(100%,230px);height:160px;display:flex;align-items:center;justify-content:center;position:relative;z-index:1}.mascot img{width:100%;height:100%;object-fit:contain;display:none}.mascot .fallback{font-size:92px;filter:drop-shadow(0 9px 5px #795b3622)}.mascot.has-image img{display:block}.mascot.has-image .fallback{display:none}.hero-card strong{position:relative;z-index:1;font-size:19px}.hero-card small{position:relative;z-index:1;color:#9a7b61;margin-top:5px}.section{background:#fffaf0d9;border:1px solid #fff;border-radius:28px;padding:clamp(18px,3vw,28px);box-shadow:var(--shadow);margin:16px 0}.section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}.section h2{margin:0 0 8px;font-size:clamp(22px,4vw,30px);letter-spacing:-.035em}.muted{color:#947b66;line-height:1.6;font-size:14px}.moods{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:18px}.mood{border:2px solid #f0dfcb;background:#fff4e3;border-radius:18px;min-height:94px;padding:12px 8px;color:#76513d;font-weight:900;transition:transform .15s,border-color .15s}.mood:hover{transform:translateY(-2px);border-color:#d8b18a}.mood span{display:block;font-size:28px;margin-bottom:5px}.message{background:#fff0dc;border:1px solid #f3dfc7;border-radius:20px;padding:18px;line-height:1.7;font-weight:750;margin:14px 0}.button-row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}.tile{border:1px solid #f0dfca;border-radius:22px;padding:18px;background:#fff8ed}.tile h3{margin:0 0 7px}.game-area{border:1px dashed #d6b995;border-radius:20px;padding:16px;margin-top:12px;background:#fff8ee}.game-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;max-width:420px;margin:14px auto}.game-card{min-height:68px;border-radius:14px;background:#f3dfc4;border:1px solid #e7c9a5;font-size:24px;font-weight:900;color:#684638}.game-card.revealed{background:#fffdf7}.game-card.matched{background:#dcebd4;border-color:#a8c79b}.catch-area{height:210px;position:relative;overflow:hidden;background:linear-gradient(#f7e8d2,#dfe9cf);border-radius:18px;margin:12px 0;touch-action:manipulation}.heart-target{position:absolute;border:0;background:transparent;font-size:30px;padding:5px}.field{width:100%;padding:11px 12px;border-radius:12px;border:1px solid #e3cdb3;background:#fffdf7;color:var(--ink)}textarea.field{min-height:86px;resize:vertical}.field-label{display:block;font-size:13px;font-weight:900;margin:12px 0 6px}.setting-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.hidden{display:none!important}.notice{border-radius:14px;padding:12px;background:#f7ead6;color:#795b42;font-size:13px;line-height:1.5}.footer{text-align:center;color:#a18a74;font-size:12px;padding:18px 8px}.star{position:fixed;pointer-events:none;z-index:5;animation:float 1.2s ease-out forwards;font-size:22px}@keyframes float{to{transform:translateY(-80px) rotate(18deg);opacity:0}}.night{background:radial-gradient(circle at 80% 10%,#f1dcae22 0 10%,transparent 25%),linear-gradient(#33354e,#4b4b67 65%,#66785f);color:#fff5e8}.night .section,.night .hero-card{background:#fffaf0ed;color:var(--ink)}.night .hero h1{color:#fff0d8}.night .hero p{color:#e8d9c9}.night .brand{color:#fff2dc}.night .chip{background:#fffaf0ed}
+@media(max-width:720px){.hero{grid-template-columns:1fr;padding-top:24px}.hero-copy{padding-bottom:0}.hero-card{min-height:220px}.mascot{height:130px}.two-col,.setting-grid{grid-template-columns:1fr}.moods{gap:7px}.mood{font-size:13px;min-height:82px}.section{border-radius:22px}.app{padding:12px}.topbar{align-items:flex-start}.game-card{min-height:58px}.hero h1{font-size:clamp(42px,12vw,64px)}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
-<canvas id="world" aria-label="Cozy blocky world"></canvas><div class="shade"></div><img id="sweetpPortrait" alt="SweetP, the capybara with her orange and white glasses" src="SWEETP_IMAGE_PLACEHOLDER" draggable="false">
-<div class="topbar"><div class="brand">🍊 CapyReminders</div><div class="top-actions"><div class="volume">♫ <span>Music</span><input id="volume" type="range" min="0" max="1" step=".05" value=".25" aria-label="Music volume"></div><button class="pill" id="mute">♫ On</button></div></div>
-<div id="entry" class="panel"><div class="mascot-emoji">🧡🦫🍊</div><div class="kicker">a tiny world, just for you</div><h1>CapyReminders</h1><p>Somewhere soft to land, whenever you need it.</p><input id="passcode" class="passcode" type="password" placeholder="Passcode (optional)" aria-label="Optional passcode"><p class="tiny">Leave blank if you don't want a passcode.</p><button class="primary" id="enter">Tap to enter ♡</button><p class="sound-note">Sound begins after you enter. You can adjust or mute it anytime.</p></div>
-<div id="welcome" class="panel hidden"><div class="mascot-emoji">🍊</div><div class="welcome-line">WELCOME CAPYDADDY KEN</div><p>SweetP saved you a little place in her world.</p></div>
-<div id="moodPanel" class="panel hidden"><div class="mascot-emoji">🦫🤍🍊</div><div class="kicker">sweetp wants to check in</div><h2>How are you feeling right now, hon?</h2><p>Whatever it is, you don't have to pretend here.</p><div class="moods" id="moods"></div><p class="tiny">Your last mood is remembered on this device, if storage is available.</p></div>
-<div id="messagePanel" class="panel hidden"><div class="kicker">a note picked just for you</div><h2 id="moodTitle">A little reminder</h2><div class="message-card" id="moodMessage"></div><div class="mascot-emoji" id="reaction">🦫💐</div><p id="gameSuggestion"></p><div class="button-row"><button class="primary" id="continueWorld">Let's explore ♡</button><button class="secondary" id="chooseMoodAgain">Change mood</button></div></div>
-<div id="speech" class="speech">SweetP is getting the world ready…</div><div class="hint" id="hint">WASD / arrows to walk</div>
-<div class="stick-zone" id="stick"><div class="stick-knob" id="knob"></div></div>
-<div class="hud" id="hud" hidden><button id="moodBtn">♡ Mood</button><button id="noteBtn">💌 Reminder</button><button id="danceBtn">♡ SweetP reaction</button><button id="petBtn">🤍 Pet SweetP</button><button id="tummyBtn">🫶 Tummy rub</button><button id="complimentBtn">🌷 Compliment</button><button id="hugBtn">🫂 Hug</button><button id="adminBtn">⚙️ Creator settings</button><button id="skyBtn">☼ Sky: auto</button></div>
+<div class="app">
+<header class="topbar">
+  <div class="brand">🍊 Capy<span>Reminders</span></div>
+  <div class="top-actions"><span class="chip" id="timeGreeting">A little place for you ♡</span><button class="btn small" id="soundToggle" aria-pressed="false">♫ Sound off</button><button class="btn small soft" id="nightToggle">☾ Cozy night</button></div>
+</header>
+<main>
+<section class="hero">
+  <div class="hero-copy"><div class="eyebrow">a tiny world, just for you</div><h1>Hi, Capydaddy Ken. ♡</h1><p id="greetingText">Whatever kind of day you're having, you can take a breath here. SweetP saved you a little place in her world.</p><div class="button-row"><button class="btn primary" id="enterBtn">Tap to enter ♡</button><button class="btn soft" id="goMood">Check in with SweetP</button></div><p class="muted" id="welcomeLine" aria-live="polite"></p></div>
+  <div class="hero-card"><div class="mascot" id="sweetpMascot"><img id="sweetpImg" alt="SweetP reference image"><div class="fallback" aria-hidden="true">🦫🍊🤍</div></div><strong id="sweetpCaption">SweetP is here for you</strong><small>soft paws, warm reminders, no rush</small><div class="button-row" style="margin-top:14px;position:relative;z-index:1"><label class="btn small soft" for="sweetpUpload">Add SweetP image</label><input id="sweetpUpload" type="file" accept="image/*" class="hidden"></div></div>
+</section>
+
+<section class="section" id="moodSection"><div class="section-head"><div><div class="eyebrow">a gentle check-in</div><h2>How are you feeling right now, hon?</h2><p class="muted">You don't have to pretend here. Choose whatever feels closest.</p></div></div><div class="moods" id="moods"></div><div id="messageArea" class="hidden" aria-live="polite"><div class="message" id="moodMessage"></div><div class="button-row"><button class="btn primary" id="newMessage">Another little reminder</button><button class="btn soft" id="shareMood">Save this moment</button></div><p class="muted" id="saveStatus"></p></div></section>
+
+<section class="section"><div class="section-head"><div><div class="eyebrow">tiny things to do together</div><h2>Spend a moment with SweetP</h2><p class="muted">Pick an interaction. SweetP will react with a little message.</p></div></div><div class="button-row" id="interactionButtons"><button class="btn soft" data-action="pet">🤍 Pet SweetP</button><button class="btn soft" data-action="tummy">🫶 Tummy rub</button><button class="btn soft" data-action="boop">👉 Boop</button><button class="btn soft" data-action="hug">🫂 Hug</button><button class="btn soft" data-action="flower">🌷 Give a flower</button><button class="btn soft" data-action="compliment">💌 Compliment</button><button class="btn soft" data-action="sit">🌿 Sit together</button><button class="btn soft" data-action="poke">🐾 Gentle poke</button></div><div class="message" id="reactionMessage" aria-live="polite">Tap an interaction to see what SweetP says. ♡</div></section>
+
+<section class="section"><div class="section-head"><div><div class="eyebrow">little play breaks</div><h2>Today's cozy corner</h2><p class="muted">Simple games that run right here in your browser.</p></div><span class="chip" id="dailyLabel">Today's pick</span></div><div class="two-col"><div class="tile"><h3>🧠 Memory Match</h3><p class="muted">Find all matching pairs. Take your time.</p><button class="btn primary" id="memoryStart">Play Memory Match</button><div class="game-area hidden" id="memoryGame"><p class="muted" id="memoryStatus">Find the pairs.</p><div class="game-grid" id="memoryGrid"></div><button class="btn soft small" id="memoryReset">Restart game</button></div></div><div class="tile"><h3>💗 Catch the Hearts</h3><p class="muted">Tap the floating hearts before time runs out.</p><button class="btn primary" id="catchStart">Play Catch the Hearts</button><div class="game-area hidden" id="catchGame"><p class="muted" id="catchStatus">Tap start to begin.</p><div class="catch-area" id="catchArea"></div><button class="btn soft small" id="catchReset">Restart game</button></div></div></div><p class="muted">More games can be added after these are tested and working.</p></section>
+
+<section class="section"><div class="section-head"><div><div class="eyebrow">small comforts</div><h2>A reminder for right now</h2></div><button class="btn soft" id="randomReminder">Give me one ♡</button></div><div class="message" id="dailyReminder">You don't have to do everything today. Just the next kind thing for yourself.</div><div class="button-row"><button class="btn soft" id="reminderCopy">Copy reminder</button><button class="btn soft" id="reminderAudio">▶ Play voice (if added)</button></div></section>
+
+<section class="section"><div class="section-head"><div><div class="eyebrow">make it yours</div><h2>SweetP Studio · local preview</h2><p class="muted">Edit the greeting, add your reference image, or choose a voice file for this browser.</p></div></div><div class="notice"><strong>Prototype privacy note:</strong> these settings are stored only in this browser when storage is available. A hidden PIN or hidden page is not secure authentication. This static website does not sync privately between devices.</div><div class="setting-grid"><div><label class="field-label" for="customGreeting">Welcome message</label><textarea id="customGreeting" class="field">SweetP saved you a little place in her world.</textarea></div><div><label class="field-label" for="customName">Greeting name</label><input id="customName" class="field" value="Capydaddy Ken"><label class="field-label" for="voiceUpload">Optional welcome voice (local file)</label><input id="voiceUpload" class="field" type="file" accept="audio/*"></div></div><div class="button-row" style="margin-top:14px"><button class="btn primary" id="saveSettings">Save settings on this device</button><button class="btn soft" id="previewVoice">▶ Preview voice</button><button class="btn soft" id="resetSettings">Reset local settings</button></div><p class="muted" id="settingsStatus" aria-live="polite"></p><audio id="voicePlayer" preload="none"></audio></section>
+
+<section class="section"><div class="section-head"><div><div class="eyebrow">a little note about privacy</div><h2>Only what you choose to share</h2></div></div><p class="muted">This version keeps mood choices and settings in the current browser when possible. It does not watch activity outside this page, use your camera or microphone, or secretly send data to anyone. Activity tracking, account separation, secure shared photo uploads, and private creator notes need a real backend and explicit sharing controls; they are not enabled here.</p><div class="button-row"><button class="btn soft" id="exportData">Export local settings</button><button class="btn soft" id="clearMood">Clear saved mood</button></div><p class="muted" id="privacyStatus" aria-live="polite"></p></section>
+</main>
+<footer class="footer">Made with soft paws and a little orange magic. ♡<br>CapyReminders is a browser-based prototype. Keep your private things private.</footer>
+</div>
 <script>
-/* ==================== AUDIO: replace these local filenames with your files ==================== */
-const AUDIO = {
-  welcome: "audio/welcome.mp3",
-  goodMorning: "audio/goodMorning.mp3",
-  goodAfternoon: "audio/goodAfternoon.mp3",
-  goodEvening: "audio/goodEvening.mp3",
-  goodNight: "audio/goodNight.mp3",
-  howAreYou: "audio/howAreYou.mp3",
-  youGotThis: "audio/youGotThis.mp3",
-  goMyLove: "audio/goMyLove.mp3",
-  capydaddyRocks: "audio/capydaddyRocks.mp3",
-  win: "audio/win.mp3"
-};
-/* Optional local background tracks: add these files yourself. */
-const MUSIC = {
-  happy: "audio/music-happy.mp3", calm: "audio/music-calm.mp3", cozy: "audio/music-cozy.mp3", playful: "audio/music-playful.mp3", night: "audio/music-night.mp3"
-};
-/* ==================== MESSAGES: edit or add SweetP's notes here ==================== */
-const MESSAGES = {
-  "Happy": [
-    "I hope your happiness stays a little longer today, hon. You deserve these bright moments. 🍊",
-    "Your smile is my favorite kind of sunshine. Keep a little of that joy for yourself, too.",
-    "I'm so glad something is making your heart feel light. You deserve good things without having to earn them.",
-    "Save this happy moment like a tiny treasure. You can come back to it on harder days.",
-    "Your joy matters, even when it comes from something small. Especially then.",
-    "I hope today gives you more reasons to giggle, relax, and feel loved.",
-    "You make ordinary moments feel warmer just by being you.",
-    "Let yourself enjoy this. You don't need to feel guilty for being happy."
-  ],
-  "Tired": [
-    "Hey, hon. You don't have to be productive every second. Rest is part of taking care of yourself.",
-    "You have permission to slow down. The world can wait while you catch your breath.",
-    "Drink some water, loosen your shoulders, and let one thing be enough for now.",
-    "You are not lazy for needing rest. Even the sun sets every day.",
-    "Do the next tiny thing, or do nothing for a little while. Both are allowed.",
-    "I wish I could tuck a blanket around you and guard your nap. 🍊",
-    "You don't have to prove your worth by exhausting yourself.",
-    "One gentle step is plenty. Be soft with yourself today."
-  ],
-  "Stressed": [
-    "One breath at a time, hon. You only need to meet this moment, not every moment at once.",
-    "Unclench your jaw. Drop your shoulders. You're allowed to take a pause before the next step.",
-    "You have handled difficult days before, but you don't have to handle this one perfectly.",
-    "Let's make the problem smaller: what is one thing you can do in the next five minutes?",
-    "You are a person, not a machine. A pause is not a failure.",
-    "Breathe in slowly, then let it out. No rush, sweetheart.",
-    "It's okay if all you do right now is steady yourself. That counts.",
-    "You don't have to solve everything tonight. Start with what's right in front of you."
-  ],
-  "Sad": [
-    "You don't have to put on a brave face here, hon. You can just be.",
-    "I wish I could sit beside you quietly until the heavy feeling eases a little.",
-    "A sad day doesn't mean a sad life. This feeling deserves care, not judgement.",
-    "You are still worthy of gentleness when you don't feel like your best self.",
-    "If today is hard, let's make it softer in small ways: water, a blanket, a little rest.",
-    "You don't need the perfect words to deserve comfort. I'm here in this little world.",
-    "Let the tears come if they need to. You don't have to apologize for having feelings.",
-    "Even on the days you feel dim, you are not any less precious."
-  ],
-  "Missing someone": [
-    "Missing someone means they matter to you. Be gentle with the space they leave behind.",
-    "You can miss someone and still take care of yourself right here, right now.",
-    "Some people leave warm little fingerprints on our hearts. It's okay to feel that.",
-    "If you could send one thought across the distance, I hope it would be wrapped in kindness.",
-    "You don't have to push the feeling away. Let it visit, then give yourself some comfort too.",
-    "Distance can make a moment feel far away, but it can't erase what mattered.",
-    "Take a breath, hon. You can carry love and still make room for your own peace.",
-    "I hope a small, unexpected thing reminds you that connection can be gentle."
-  ],
-  "Bored": [
-    "Boredom is just your brain asking for a tiny adventure. Shall we wander?",
-    "Let's find one small thing that makes today feel different. Tiny quests count!",
-    "SweetP votes for a silly walk, a new song, or an absolutely unnecessary snack.",
-    "You don't need a big plan to make a little memory.",
-    "Curiosity looks cute on you. Let's go see what's around the next tree.",
-    "Official capybara mission: discover something you haven't noticed before.",
-    "A slow day can still hold a fun surprise. Let's go looking.",
-    "If all else fails, we can sit by the river and judge the clouds."
-  ]
-};
-/* At least 14 date-based outfits. SweetP's glasses and orange are permanent. */
-const OUTFITS = [
- {name:"Picnic Day",kind:"scarf",color:0xf1a6a0},{name:"Tiny Explorer",kind:"backpack",color:0x7eaa77},
- {name:"Rainy Cuddle",kind:"raincoat",color:0x8db8d8},{name:"Flower Crown",kind:"crown",color:0xe9a2b6},
- {name:"Little Hero",kind:"cape",color:0xe77767},{name:"Strawberry Cream",kind:"scarf",color:0xf5b5bd},
- {name:"Garden Helper",kind:"hat",color:0x8cb77b},{name:"Sleepy Cloud",kind:"hat",color:0xd6d6ee},
- {name:"Sunshine Buddy",kind:"cape",color:0xf1c15e},{name:"Cozy Knit",kind:"scarf",color:0xb68dcb},
- {name:"Adventure Pack",kind:"backpack",color:0x9a765d},{name:"Little Wizard",kind:"hat",color:0x8576bb},
- {name:"Autumn Leaf",kind:"cape",color:0xc77e4c},{name:"Berry Picnic",kind:"crown",color:0xd96f89}
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const MOODS=[
+ {name:'Happy',emoji:'🌞',messages:[
+ 'I hope your happiness stays a little longer today, hon. You deserve these bright moments. 🍊','Your smile is my favorite kind of sunshine. Keep a little of that joy for yourself, too.','I am glad something is making your heart feel light. You deserve good things without having to earn them.','Save this happy moment like a tiny treasure. You can come back to it on harder days.','Your joy matters, even when it comes from something small. Especially then.','I hope today gives you more reasons to giggle, relax, and feel loved.','You make ordinary moments feel warmer just by being you.','Let yourself enjoy this. You do not need to feel guilty for being happy.']},
+ {name:'Tired',emoji:'😴',messages:[
+ 'You do not have to be productive every second. Rest is part of taking care of yourself.','You have permission to slow down. The world can wait while you catch your breath.','Drink some water, loosen your shoulders, and let one thing be enough for now.','You are not lazy for needing rest. Even the sun sets every day.','Do the next tiny thing, or do nothing for a little while. Both are allowed.','I wish I could tuck a blanket around you and guard your nap. 🍊','You do not have to prove your worth by exhausting yourself.','One gentle step is plenty. Be soft with yourself today.']},
+ {name:'Stressed',emoji:'🌧️',messages:[
+ 'One breath at a time, hon. You only need to meet this moment, not every moment at once.','Unclench your jaw. Drop your shoulders. You are allowed to pause before the next step.','You have handled difficult days before, but you do not have to handle this one perfectly.','Let us make the problem smaller: what is one thing you can do in the next five minutes?','You are a person, not a machine. A pause is not a failure.','Breathe in slowly, then let it out. No rush, sweetheart.','It is okay if all you do right now is steady yourself. That counts.','You do not have to solve everything tonight. Start with one small thing.']},
+ {name:'Sad',emoji:'🥺',messages:[
+ 'You do not have to turn your sadness into a lesson right away. You can just feel it.','I wish I could sit beside you quietly until the heavy part feels a little less heavy.','You are still worthy of love on the days you cannot smile. Especially on those days.','It is okay to miss what mattered to you. It means it was real to your heart.','You do not need to explain every feeling to deserve gentleness.','Let today be softer. Eat something, drink some water, and take the next breath.','This feeling is real, but it is not the whole story of you.','You are allowed to ask for company. You do not have to carry everything alone.']},
+ {name:'Missing someone',emoji:'💌',messages:[
+ 'Missing someone can make even an ordinary day feel quieter. Be gentle with your heart, hon.','Distance does not make your feelings silly. It is okay to wish someone were here.','Send a kind message if it feels right, then give yourself permission to enjoy your own day too.','You can miss someone and still take care of yourself in the present moment.','Imagine a tiny capybara sending you a warm hug across the distance. 🦫','Love can make a person feel close even when the miles say otherwise.','You deserve comfort while you wait, not only when someone is beside you.','Take a breath. You can hold the feeling without letting it take your whole day.']},
+ {name:'Bored',emoji:'🫧',messages:[
+ 'Boredom might be your little invitation to try something silly. Want to play a game?','Let us make a tiny adventure out of an ordinary minute.','Stretch your arms, look out a window, and pick one small thing just because it sounds fun.','You do not have to make every moment productive. Fun is a good reason on its own.','SweetP votes for a snack, a song, and absolutely no serious thoughts for five minutes.','Try something you have not done in a while. Tiny novelty can brighten a day.','You have full permission to be a little ridiculous today.','Pick a color, find three things around you in that color, and call it a tiny quest.']}
 ];
-const MOODS = [
- {name:"Happy",emoji:"😊",game:"A cheerful little challenge",reaction:"💃",audio:"goMyLove"},
- {name:"Tired",emoji:"😴",game:"A gentle, relaxing wander",reaction:"🫂",audio:"goodNight"},
- {name:"Stressed",emoji:"😮‍💨",game:"A calm memory game",reaction:"🌼",audio:"youGotThis"},
- {name:"Sad",emoji:"🥺",game:"A quiet river-side break",reaction:"🫂",audio:"youGotThis"},
- {name:"Missing someone",emoji:"💌",game:"A peaceful heart hunt",reaction:"🌷",audio:"goMyLove"},
- {name:"Bored",emoji:"😋",game:"A playful mini-adventure",reaction:"💃",audio:"capydaddyRocks"}
-];
-/* ==================== Small, safe storage helpers ==================== */
-function saveLocal(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
-function loadLocal(k,fallback){try{const v=localStorage.getItem(k);return v?JSON.parse(v):fallback;}catch(e){return fallback;}}
-function todayIndex(){const d=new Date();return Math.floor((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-Date.UTC(d.getFullYear(),0,0))/86400000);}
-function timeMood(){const h=new Date().getHours();if(h>=5&&h<12)return {label:"Good morning",audio:"goodMorning",night:false};if(h>=12&&h<18)return {label:"Good afternoon",audio:"goodAfternoon",night:false};if(h>=18&&h<22)return {label:"Good evening",audio:"goodEvening",night:false};return {label:"Good night",audio:"goodNight",night:true};}
-let currentMood=null,currentMessage="",entered=false,manualSky=false,skyMode="auto",musicMuted=false,musicVolume=.25,audioUnlocked=false;
-let activeAudio=null,musicAudio=null;
-function playVoice(key){if(!audioUnlocked)return;const file=customVoices[key]||AUDIO[key];if(!file)return;try{if(activeAudio){activeAudio.pause();activeAudio.currentTime=0;}activeAudio=new Audio(file);activeAudio.volume=musicMuted?0:Math.min(1,musicVolume===0?.65:.85);activeAudio.play().catch(()=>{});}catch(e){}}
-function playMoodMusic(mood){if(!audioUnlocked)return;const key=mood==="Happy"?"happy":mood==="Bored"?"playful":mood==="Tired"?"night":mood==="Stressed"||mood==="Sad"||mood==="Missing someone"?"calm":"cozy";try{if(musicAudio){musicAudio.pause();musicAudio.currentTime=0;}musicAudio=new Audio(MUSIC[key]||MUSIC.cozy);musicAudio.loop=true;musicAudio.volume=musicMuted?0:musicVolume;musicAudio.play().catch(()=>{});}catch(e){}}
-function speak(text){const box=document.getElementById("speech");box.textContent=text;try{if("speechSynthesis"in window){window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.rate=.91;u.pitch=1.15;u.volume=musicMuted?0:Math.max(.2,musicVolume);window.speechSynthesis.speak(u);}}catch(e){}}
-function sayTimeGreeting(){const t=timeMood();setSky(t.night?"night":t.label==="Good morning"?"morning":t.label==="Good afternoon"?"day":"evening");speak(t.label+", Capydaddy Ken. SweetP is happy you're here.");playVoice(t.audio);if(t.night){document.body.classList.add("night");}else document.body.classList.remove("night");}
-function showPanel(id){document.querySelectorAll(".panel").forEach(p=>p.classList.add("hidden"));if(id)document.getElementById(id).classList.remove("hidden");}
-function makeMoodButtons(){const host=document.getElementById("moods");host.innerHTML="";MOODS.forEach(m=>{const b=document.createElement("button");b.className="mood";b.innerHTML="<span>"+m.emoji+"</span>"+m.name;b.addEventListener("click",()=>chooseMood(m.name));host.appendChild(b);});}
-function chooseMood(name){currentMood=MOODS.find(m=>m.name===name);const list=MESSAGES[name]||MESSAGES.Happy;currentMessage=list[Math.floor(Math.random()*list.length)];saveLocal("capyreminders-lastMood",{name,date:new Date().toISOString()});playMoodMusic(name);document.getElementById("moodTitle").textContent=name+" day, hon ♡";document.getElementById("moodMessage").textContent=currentMessage;document.getElementById("reaction").textContent=currentMood.reaction+" 🍊";document.getElementById("gameSuggestion").textContent="SweetP recommends: "+currentMood.game+". You can explore freely for now.";showPanel("messagePanel");speak("Thank you for telling me, hon. "+currentMessage);playVoice(currentMood.audio);sweetPReact(name);}
-function chooseMoodAgain(){showPanel("moodPanel");speak("How are you feeling right now, hon?");playVoice("howAreYou");}
-function heartBurst(){for(let i=0;i<8;i++){const h=document.createElement("span");h.className="heart";h.textContent=["♡","♥","💗","✦"][i%4];h.style.left=(35+Math.random()*30)+"%";h.style.top=(38+Math.random()*18)+"%";document.body.appendChild(h);setTimeout(()=>h.remove(),1600);}}
-function sweetPReact(mood){if(!sweetP)return;sweetP.userData.reactUntil=performance.now()+1800;sweetP.userData.reaction=mood;heartBurst();}
-document.getElementById("enter").addEventListener("click",()=>{
- const code=document.getElementById("passcode").value;
- if(code&&code!=="") { /* Optional passcode: set PASSCODE below if desired. */ if(PASSCODE&&code!==PASSCODE){speak("That passcode doesn't look right, hon. Try again.");return;} }
- entered=true;audioUnlocked=true;showPanel("welcome");playVoice("welcome");speak("WELCOME CAPYDADDY KEN");
- setTimeout(()=>{if(!entered)return;showPanel(null);sayTimeGreeting();setTimeout(()=>{showPanel("moodPanel");speak("How are you feeling right now, hon?");playVoice("howAreYou");},1900);},2400);
-});
-/* Optional gate: leave empty for no passcode. */
-const PASSCODE="";
-/* Change this PIN before sharing. Static-site PINs are a convenience gate, not secure authentication. */
-const ADMIN_PIN="sweetp-change-this";
-const customVoices={};
-document.getElementById("continueWorld").addEventListener("click",()=>{showPanel(null);document.getElementById("hud").hidden=false;document.getElementById("speech").style.display="block";speak("I'm right here, hon. Let's take it easy.");});
-document.getElementById("chooseMoodAgain").addEventListener("click",chooseMoodAgain);
-document.getElementById("moodBtn").addEventListener("click",()=>{showPanel("moodPanel");speak("How are you feeling right now, hon?");playVoice("howAreYou");});
-document.getElementById("noteBtn").addEventListener("click",()=>{if(!currentMood){showPanel("moodPanel");return;}document.getElementById("moodTitle").textContent="A little note for you";document.getElementById("moodMessage").textContent=currentMessage;document.getElementById("reaction").textContent=currentMood.reaction+" 🍊";document.getElementById("gameSuggestion").textContent="SweetP is keeping you company. Games will be added in the next phase.";showPanel("messagePanel");});
-document.getElementById("danceBtn").addEventListener("click",()=>{sweetPReact(currentMood?currentMood.name:"Happy");speak(currentMood&&currentMood.name==="Tired"?"Let's have a sleepy cuddle, hon.":"You got this, hon!");playVoice("youGotThis");});
-document.getElementById("skyBtn").addEventListener("click",()=>{manualSky=true;const modes=["morning","day","evening","night"];skyMode=modes[(modes.indexOf(skyMode)+1)%modes.length];setSky(skyMode);document.getElementById("skyBtn").textContent="☼ Sky: "+skyMode;});
-document.getElementById("mute").addEventListener("click",()=>{musicMuted=!musicMuted;document.getElementById("mute").textContent=musicMuted?"♫ Muted":"♫ On";if(musicAudio)musicAudio.volume=musicMuted?0:musicVolume;if(activeAudio)activeAudio.volume=musicMuted?0:.85;});
-document.getElementById("volume").addEventListener("input",e=>{musicVolume=Number(e.target.value);if(musicAudio)musicAudio.volume=musicMuted?0:musicVolume;if(activeAudio)activeAudio.volume=musicMuted?0:Math.max(.2,musicVolume);});
-/* ==================== THREE.JS WORLD: lightweight voxel scene ==================== */
-const canvas=document.getElementById("world");let renderer,scene,camera,player,sweetP,worldReady=false;
-const keys={};let joy={x:0,y:0,active:false},lastTime=0,daylight=1,clouds=[];
-function mat(color,roughness=1){return new THREE.MeshLambertMaterial({color,roughness});}
-function cube(parent,x,y,z,sx,sy,sz,color){const m=new THREE.Mesh(new THREE.BoxGeometry(sx,sy,sz),mat(color));m.position.set(x,y,z);parent.add(m);return m;}
-function sphere(parent,x,y,z,sx,sy,sz,color,segments=12){const m=new THREE.Mesh(new THREE.SphereGeometry(1,segments,Math.max(6,segments>>1)),mat(color));m.position.set(x,y,z);m.scale.set(sx,sy,sz);parent.add(m);return m;}
-function group(parent,x=0,y=0,z=0){const g=new THREE.Group();g.position.set(x,y,z);parent.add(g);return g;}
-function makeSweetP(){
- const g=group(scene,1,0,1);g.userData={reactUntil:0,reaction:""};
- /* SweetP is styled after your reference: extra-chubby, warm caramel fur,
-    cream tummy, sleepy smile, white round glasses, and her signature orange. */
- const fur=0xd9a06b, furLight=0xe2b17e, muzzle=0x956747, cream=0xffead0;
- sphere(g,0,.88,0,.68,.77,.56,fur,18);                 // round chubby body
- sphere(g,0,.88,.445,.43,.52,.16,cream,16);           // pale tummy
- sphere(g,0,1.49,-.01,.61,.57,.52,furLight,18);       // big round head
- sphere(g,-.43,1.82,-.01,.17,.2,.14,0xb98258,12);     // left ear
- sphere(g,.43,1.82,-.01,.17,.2,.14,0xb98258,12);      // right ear
- sphere(g,-.43,1.83,.085,.095,.12,.035,0xe0ad87,10);
- sphere(g,.43,1.83,.085,.095,.12,.035,0xe0ad87,10);
- sphere(g,0,1.39,.435,.32,.29,.17,muzzle,16);         // soft brown snout
- sphere(g,-.105,1.48,.579,.035,.045,.025,0x35251c,8);
- sphere(g,.105,1.48,.579,.035,.045,.025,0x35251c,8);
- sphere(g,0,1.34,.594,.035,.025,.02,0x35251c,8);     // tiny nose
- /* Closed, sleepy curved eyes, so she keeps the sweet expression in the reference. */
- const eyeMat=mat(0x4b3026);
- const eyeGeo=new THREE.TorusGeometry(.105,.018,5,12,Math.PI);
- const eyeL=new THREE.Mesh(eyeGeo,eyeMat);eyeL.position.set(-.22,1.61,.48);eyeL.rotation.z=Math.PI;g.add(eyeL);
- const eyeR=new THREE.Mesh(eyeGeo,eyeMat);eyeR.position.set(.22,1.61,.48);eyeR.rotation.z=Math.PI;g.add(eyeR);
- sphere(g,-.34,1.4,.49,.095,.045,.025,0xf19c9e,10);
- sphere(g,.34,1.4,.49,.095,.045,.025,0xf19c9e,10);
- /* Permanent white-framed glasses. They stay on through every outfit change. */
- const white=mat(0xfffaf4);
- const ringGeo=new THREE.TorusGeometry(.145,.018,6,20);
- const l=new THREE.Mesh(ringGeo,white);l.position.set(-.22,1.59,.51);g.add(l);
- const r=new THREE.Mesh(ringGeo,white);r.position.set(.22,1.59,.51);g.add(r);
- cube(g,0,1.59,.525,.09,.022,.022,0xfffaf4);
- cube(g,-.39,1.6,.43,.13,.025,.025,0xfffaf4);
- cube(g,.39,1.6,.43,.13,.025,.025,0xfffaf4);
- /* Tiny arms and toes make her silhouette softer and more capybara-like. */
- sphere(g,-.48,.94,.24,.19,.3,.2,fur,12).rotation.z=-.45;
- sphere(g,.48,.94,.24,.19,.3,.2,fur,12).rotation.z=.45;
- sphere(g,-.34,.22,.2,.2,.14,.25,muzzle,10);
- sphere(g,.34,.22,.2,.2,.14,.25,muzzle,10);
- /* Signature orange on top of her head, with a little green leaf. */
- sphere(g,0,2.13,.015,.19,.18,.18,0xf28c24,14);
- const stem=cube(g,-.015,2.31,.015,.035,.09,.035,0x648f45);stem.rotation.z=-.15;
- const leaf=sphere(g,.105,2.34,.015,.14,.045,.07,0x76a84d,10);leaf.rotation.z=-.3;
- return g;
-}
-function dressSweetP(index){
- if(!sweetP)return;
- if(sweetP.userData.outfit)sweetP.remove(sweetP.userData.outfit);
- const outfit=OUTFITS[index%OUTFITS.length],g=group(sweetP);sweetP.userData.outfit=g;
- const color=outfit.color;
- if(outfit.kind==="scarf"){cube(g,0,1.1,.04,.75,.15,.52,color);cube(g,.22,.9,.28,.15,.38,.1,color);}
- if(outfit.kind==="backpack"){cube(g,0,1.02,-.42,.48,.48,.2,color);cube(g,0,1.02,-.54,.28,.22,.04,0xe8c6a0);}
- if(outfit.kind==="raincoat"){cube(g,0,.95,.02,.95,.62,.78,color);cube(g,0,1.27,.42,.22,.08,.06,0xfff0ca);}
- if(outfit.kind==="crown"){for(let i=0;i<5;i++){const a=(i/5)*Math.PI*2;sphere(g,Math.cos(a)*.33,1.86,Math.sin(a)*.25,.1,.1,.08,color);}}
- if(outfit.kind==="cape"){const cape=cube(g,0,1.05,-.28,.62,.75,.12,color);cape.rotation.x=-.12;}
- if(outfit.kind==="hat"){const brim=cube(g,0,1.85,0,.65,.08,.55,color);cube(g,0,1.98,0,.4,.2,.36,color);if(outfit.name==="Little Wizard"){const tip= new THREE.Mesh(new THREE.ConeGeometry(.18,.3,5),mat(color));tip.position.set(0,2.22,0);g.add(tip);}}
-}
-function makeWorld(){
- scene=new THREE.Scene();scene.fog=new THREE.Fog(0xf5d7b8,15,42);
- camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,.1,100);camera.position.set(0,6,10);
- renderer=new THREE.WebGLRenderer({canvas,antialias:false,alpha:false,powerPreference:"low-power"});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=false;
- scene.add(new THREE.HemisphereLight(0xfff0d5,0x71865b,1.35));const sun=new THREE.DirectionalLight(0xffe2b7,1.25);sun.position.set(-5,10,6);scene.add(sun);scene.userData.sun=sun;
- const ground=cube(scene,0,-.22,0,60,.4,60,0x85b77e);
- /* Blocky shoreline and a small river ribbon. */
- cube(scene,0,-.03,-8,60,.12,5,0x78c8d4);cube(scene,0,-.1,-8,60,.12,3.8,0x83d4dc);
- for(let i=0;i<120;i++){const x=Math.random()*46-23,z=Math.random()*44-22;if(z<-5&&z>-11)continue;cube(scene,x,.04,z,.35+Math.random()*.4,.12,.35+Math.random()*.4,Math.random()>.5?0x90c887:0x7faf73);}
- for(let i=0;i<24;i++){const x=Math.random()*38-19,z=Math.random()*34-17;if(z<-11&&z>-5)continue;const tree=group(scene,x,0,z);cube(tree,0,.65,0,.28,1.3,.28,0x98684a);cube(tree,0,1.65,0,1.15,1.05,1.15,0x6d9f68);cube(tree,.28,2.1,.12,.65,.6,.65,0x82b77a);}
- for(let i=0;i<44;i++){const x=Math.random()*44-22,z=Math.random()*40-20;if(z<-10&&z>-5)continue;const f=group(scene,x,0,z);cube(f,0,.15,0,.06,.3,.06,0x4c8d4e);sphere(f,0,.34,0,.12,.12,.12,[0xf6b6c4,0xffe6a1,0xffffff,0xe5a9d1][i%4],8);}
- for(let i=0;i<8;i++){const cloud=group(scene,Math.random()*30-15,5+Math.random()*2,Math.random()*24-12);sphere(cloud,0,0,0,1.4,.35,.7,0xfff8e9,8);sphere(cloud,.8,.08,0,.8,.3,.6,0xfff8e9,8);sphere(cloud,-.7,.03,.08,.75,.28,.6,0xfff8e9,8);clouds.push(cloud);}
- player=group(scene,0,0,4);sphere(player,0,.62,0,.34,.42,.3,0x8a654c);sphere(player,0,1.02,.03,.29,.29,.27,0x9a7357);sphere(player,-.11,1.06,.25,.04,.04,.03,0x33251e);sphere(player,.11,1.06,.25,.04,.04,.03,0x33251e);
- sweetP=makeSweetP();sweetP.visible=false;dressSweetP(todayIndex()%OUTFITS.length);
- worldReady=true;setSky(timeMood().night?"night":timeMood().label==="Good morning"?"morning":timeMood().label==="Good afternoon"?"day":"evening");
-}
-function setSky(mode){if(!scene)return;skyMode=mode;const presets={morning:{sky:0xf6c7a8,ground:0x85b77e,light:1.25,fog:0xf2cdb2},day:{sky:0x9edcf0,ground:0x91c981,light:1.7,fog:0xcde7d7},evening:{sky:0xefad91,ground:0x729d70,light:.85,fog:0xf0c2a4},night:{sky:0x171f42,ground:0x496b63,light:.45,fog:0x202949}};const p=presets[mode]||presets.day;scene.background=new THREE.Color(p.sky);scene.fog.color.setHex(p.fog);scene.userData.sun.intensity=p.light;scene.children.forEach(o=>{if(o.isHemisphereLight)o.intensity=mode==="night"?.42:mode==="day"?.95:.75;});document.getElementById("skyBtn").textContent="☼ Sky: "+mode;}
-function resize(){if(!renderer||!camera)return;camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setSize(innerWidth,innerHeight);}
-function animate(t){requestAnimationFrame(animate);if(!worldReady)return;const dt=Math.min((t-lastTime)/1000||0,.05);lastTime=t;let dx=0,dz=0;if(keys.w||keys.ArrowUp)dz-=1;if(keys.s||keys.ArrowDown)dz+=1;if(keys.a||keys.ArrowLeft)dx-=1;if(keys.d||keys.ArrowRight)dx+=1;dx+=joy.x;dz+=joy.y;const len=Math.hypot(dx,dz);if(len>1){dx/=len;dz/=len;}if(len>.05){player.position.x+=dx*dt*3.5;player.position.z+=dz*dt*3.5;player.position.x=Math.max(-25,Math.min(25,player.position.x));player.position.z=Math.max(-23,Math.min(22,player.position.z));player.rotation.y=Math.atan2(dx,dz);player.position.y=Math.abs(Math.sin(t*.012))*.035;}
- const target=new THREE.Vector3(player.position.x,player.position.y+1,player.position.z);camera.position.lerp(new THREE.Vector3(player.position.x,6.4,player.position.z+9),.055);camera.lookAt(target);
- const dist=sweetP.position.distanceTo(player.position);if(dist>2.3){sweetP.position.x+=(player.position.x-sweetP.position.x)*dt*.7;sweetP.position.z+=(player.position.z-sweetP.position.z)*dt*.7;}sweetP.position.y=Math.sin(t*.002)*.05;if(sweetP.userData.reactUntil>t){sweetP.rotation.y+=dt*5;sweetP.position.y+=Math.abs(Math.sin(t*.01))*.12;}else sweetP.rotation.y+=(player.position.x-sweetP.position.x)*dt*.15;
- clouds.forEach((c,i)=>{c.position.x+=dt*(.12+i%3*.05);if(c.position.x>23)c.position.x=-23;});
- renderer.render(scene,camera);}
-document.addEventListener("keydown",e=>{const k=e.key.length===1?e.key.toLowerCase():e.key;if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key))e.preventDefault();keys[k]=true;});
-document.addEventListener("keyup",e=>{const k=e.key.length===1?e.key.toLowerCase():e.key;keys[k]=false;});
-const stick=document.getElementById("stick"),knob=document.getElementById("knob");let stickRect=null;
-function setJoy(e){const r=stick.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;let x=e.clientX-cx,y=e.clientY-cy;const max=34,d=Math.hypot(x,y)||1;if(d>max){x=x/d*max;y=y/d*max;}joy.x=x/max;joy.y=y/max;knob.style.transform="translate("+x+"px,"+y+"px)";}
-stick.addEventListener("pointerdown",e=>{joy.active=true;stick.setPointerCapture(e.pointerId);setJoy(e);});stick.addEventListener("pointermove",e=>{if(joy.active)setJoy(e);});function releaseJoy(){joy.active=false;joy.x=0;joy.y=0;knob.style.transform="translate(0,0)";}stick.addEventListener("pointerup",releaseJoy);stick.addEventListener("pointercancel",releaseJoy);
-makeMoodButtons();makeWorld();addEventListener("resize",resize);requestAnimationFrame(animate);
+const REACTIONS={
+ pet:['Mmm, that is the good spot, hon. ♡','SweetP leans into your hand and wiggles happily.','A tiny happy squeak! More gentle pets, please.'],
+ tummy:['Hehe, tiny tummy rubs! SweetP is so cozy now.','SweetP flops over dramatically like a very pleased potato.','A soft giggle and a happy little wiggle.'],
+ boop:['Boop received! SweetP blinks and smiles at you.','Eep! Nose boop! Your turn, hon. 🍊','SweetP gives you the tiniest boop back.'],
+ hug:['Big cozy capybara hug, just for you. 🫂','SweetP snuggles close for a little moment.','A warm hug, no words needed.'],
+ flower:['For me? SweetP is keeping this flower forever. 🌷','SweetP tucks the flower beside her orange.','A flower for the sweetest visitor.'],
+ compliment:['SweetP gets shy and adjusts her glasses. You are too kind!','A happy blush! SweetP thinks you are pretty wonderful too.','That compliment is going straight into SweetP’s tiny heart.'],
+ sit:['SweetP sits beside you. We can be quiet together.','No need to talk. Just sharing the sunshine is enough.','SweetP settles down beside you and watches the clouds.'],
+ poke:['Eep! Gentle paws, please, hon. SweetP is okay.','SweetP does a tiny surprised bounce, then forgives you.','Soft paws only! SweetP boops your finger back.']
+};
+const REMINDERS=['You do not have to do everything today. Just the next kind thing for yourself.','You are allowed to rest before you are completely exhausted.','Small progress is still progress, hon.','You deserve the same patience you give to other people.','One difficult moment does not get to define your whole day.','Drink a little water. Unclench your jaw. You are here, and that is enough for this moment.','You can start again gently. You do not need to punish yourself for being human.'];
+const state={mood:null,lastMessage:'',voiceUrl:null,imageUrl:null,soundOn:false,night:false};
+function safeGet(key){try{return localStorage.getItem(key)}catch(e){return null}}
+function safeSet(key,value){try{localStorage.setItem(key,value);return true}catch(e){return false}}
+function safeRemove(key){try{localStorage.removeItem(key);return true}catch(e){return false}}
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)]}
+function speak(text){$('welcomeLine').textContent=text;popHearts(3)}
+function popHearts(count){for(let i=0;i<count;i++){const el=document.createElement('span');el.className='star';el.textContent=pick(['♡','🍊','✨','💗']);el.style.left=(20+Math.random()*60)+'vw';el.style.top=(50+Math.random()*25)+'vh';document.body.appendChild(el);setTimeout(()=>el.remove(),1300)}}
+function greeting(){const h=new Date().getHours();let name,txt;if(h>=5&&h<12){name='Good morning';txt='May your morning begin gently. You do not have to rush into everything at once.'}else if(h>=12&&h<18){name='Good afternoon';txt='Take a little pause in the middle of your day. SweetP saved you a soft place to land.'}else if(h>=18&&h<22){name='Good evening';txt='The day can slow down now. Let yourself put a few things down, hon.'}else{name='Good night';txt='The world can be quiet for a while. Get cozy, breathe slowly, and let yourself rest.'} $('timeGreeting').textContent=name+' ♡';$('greetingText').textContent=loadSetting('greetingText')||txt; if(h>=22||h<5){document.body.classList.add('night');state.night=true;$('nightToggle').textContent='☼ Day colors'} }
+function loadSetting(key){const data=safeGet('capyreminders.settings');if(!data)return null;try{return JSON.parse(data)[key]??null}catch(e){return null}}
+function saveSettings(show=true){const data={greetingText:$('customGreeting').value.trim(),name:$('customName').value.trim()||'Capydaddy Ken'};const ok=safeSet('capyreminders.settings',JSON.stringify(data));$('greetingText').textContent=data.greetingText||'SweetP saved you a little place in her world.';document.querySelector('.hero h1').textContent='Hi, '+data.name+'. ♡';$('settingsStatus').textContent=show?(ok?'Saved in this browser.':'Browser storage is unavailable; changes are temporary.'):'';return ok}
+function renderMoods(){$('moods').textContent='';MOODS.forEach(m=>{const b=document.createElement('button');b.className='mood';b.innerHTML='<span>'+m.emoji+'</span>'+m.name;b.addEventListener('click',()=>chooseMood(m.name));$('moods').appendChild(b)})}
+function chooseMood(name){const m=MOODS.find(x=>x.name===name);if(!m)return;state.mood=name;state.lastMessage=pick(m.messages);$('messageArea').classList.remove('hidden');$('moodMessage').textContent=state.lastMessage;$('saveStatus').textContent=safeSet('capyreminders.lastMood',JSON.stringify({mood:name,date:new Date().toISOString()}))?'Your mood was saved on this device.':'This mood will stay here for this visit only.'; $('sweetpCaption').textContent='SweetP is here with you';speak(m.emoji+' SweetP is sending you a little kindness.');$('moodMessage').scrollIntoView({behavior:'smooth',block:'nearest'})}
+$('moods').addEventListener('click',e=>{const b=e.target.closest('button');if(b){}});
+$('enterBtn').addEventListener('click',()=>{const name=loadSetting('name')||'Capydaddy Ken';$('welcomeLine').textContent='WELCOME CAPYDADDY KEN ♡';$('greetingText').textContent='SweetP saved you a little place in her world, '+name+'.';popHearts(8);if(state.voiceUrl){playVoice()}else if(state.soundOn){playVoice()}});
+$('goMood').addEventListener('click',()=>$('moodSection').scrollIntoView({behavior:'smooth'}));
+$('newMessage').addEventListener('click',()=>chooseMood(state.mood));
+$('shareMood').addEventListener('click',()=>{const text='CapyReminders · '+state.mood+'\n'+state.lastMessage;if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(()=>$('saveStatus').textContent='Reminder copied. ♡').catch(()=>{$('saveStatus').textContent='Your reminder: '+state.lastMessage})}else{$('saveStatus').textContent='Your reminder: '+state.lastMessage}});
+$('interactionButtons').addEventListener('click',e=>{const b=e.target.closest('button[data-action]');if(!b)return;const a=b.dataset.action;$('reactionMessage').textContent=pick(REACTIONS[a]||['SweetP is happy you are here.']);$('sweetpCaption').textContent=({pet:'Happy little capybara',tummy:'Maximum coziness achieved',boop:'Boop!',hug:'Sending you a warm hug',flower:'Flower accepted with love',compliment:'SweetP is blushing',sit:'Quiet company is good company',poke:'Gentle paws, please'})[a]||'SweetP is here';popHearts(a==='hug'?7:3)});
+$('randomReminder').addEventListener('click',()=>{$('dailyReminder').textContent=pick(REMINDERS);popHearts(2)});
+$('reminderCopy').addEventListener('click',()=>{const t=$('dailyReminder').textContent;if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(()=>{$('reminderCopy').textContent='Copied ♡'}).catch(()=>alert(t));else alert(t)});
+function playVoice(){const player=$('voicePlayer');if(!player.src){$('settingsStatus').textContent='Add a local voice file in SweetP Studio first.';return}player.play().then(()=>{}).catch(()=>$('settingsStatus').textContent='This browser could not play the selected audio. Try another file.')}
+$('voiceUpload').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];if(!f)return;if(state.voiceUrl)URL.revokeObjectURL(state.voiceUrl);state.voiceUrl=URL.createObjectURL(f);$('voicePlayer').src=state.voiceUrl;$('settingsStatus').textContent='Voice ready for this visit: '+f.name});
+$('previewVoice').addEventListener('click',playVoice);
+$('soundToggle').addEventListener('click',()=>{state.soundOn=!state.soundOn;$('soundToggle').textContent=state.soundOn?'♫ Sound on':'♫ Sound off';$('soundToggle').setAttribute('aria-pressed',String(state.soundOn));if(state.soundOn&&state.voiceUrl)playVoice()});
+$('nightToggle').addEventListener('click',()=>{state.night=!state.night;document.body.classList.toggle('night',state.night);$('nightToggle').textContent=state.night?'☼ Day colors':'☾ Cozy night'});
+$('sweetpUpload').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];if(!f)return;if(state.imageUrl)URL.revokeObjectURL(state.imageUrl);state.imageUrl=URL.createObjectURL(f);$('sweetpImg').src=state.imageUrl;$('sweetpMascot').classList.add('has-image');$('settingsStatus').textContent='SweetP image loaded for this visit. Add the image file to your website repository to make it available to other visitors.'});
+$('saveSettings').addEventListener('click',()=>saveSettings(true));
+$('resetSettings').addEventListener('click',()=>{safeRemove('capyreminders.settings');$('customGreeting').value='SweetP saved you a little place in her world.';$('customName').value='Capydaddy Ken';saveSettings(true)});
+$('exportData').addEventListener('click',()=>{const data={settings:safeGet('capyreminders.settings'),lastMood:safeGet('capyreminders.lastMood'),exportedAt:new Date().toISOString()};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='capyreminders-local-settings.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);$('privacyStatus').textContent='Export prepared on this device.'});
+$('clearMood').addEventListener('click',()=>{$('privacyStatus').textContent=safeRemove('capyreminders.lastMood')?'Saved mood cleared.':'Storage was unavailable; there was no saved mood to clear.'});
+const day=(new Date().getFullYear()*10000)+(new Date().getMonth()+1)*100+new Date().getDate();$('dailyLabel').textContent='Daily cozy pick · '+['Memory Match','Catch the Hearts'][day%2];
+/* Memory Match */
+let cards=[],first=null,lock=false,matches=0,moves=0;
+function startMemory(){const faces=['🍊','🌷','💗','🦫','🌿','⭐','🍓','☁️'];cards=faces.concat(faces).sort(()=>Math.random()-.5);first=null;lock=false;matches=0;moves=0;$('memoryGrid').textContent='';$('memoryStatus').textContent='Find all 8 pairs. Moves: 0';cards.forEach((face,i)=>{const b=document.createElement('button');b.className='game-card';b.textContent='?';b.setAttribute('aria-label','Hidden card '+(i+1));b.dataset.face=face;b.dataset.index=i;b.addEventListener('click',()=>flipCard(b));$('memoryGrid').appendChild(b)});$('memoryGame').classList.remove('hidden')}
+function flipCard(b){if(lock||b.classList.contains('matched')||b.classList.contains('revealed'))return;b.textContent=b.dataset.face;b.classList.add('revealed');if(!first){first=b;return}moves++;if(first.dataset.face===b.dataset.face){first.classList.add('matched');b.classList.add('matched');first=null;matches++;$('memoryStatus').textContent='Pairs: '+matches+'/8 · Moves: '+moves;if(matches===8){$('memoryStatus').textContent='You did it! All pairs found in '+moves+' moves. SweetP is proud of you. ♡';$('reactionMessage').textContent='A little victory dance for you! 🎉';popHearts(8)}}else{lock=true;const old=first;first=null;setTimeout(()=>{old.textContent='?';b.textContent='?';old.classList.remove('revealed');b.classList.remove('revealed');lock=false},700);$('memoryStatus').textContent='Keep looking. Moves: '+moves}}
+$('memoryStart').addEventListener('click',startMemory);$('memoryReset').addEventListener('click',startMemory);
+/* Catch the Hearts: bounded timer; no background loop persists after game ends. */
+let catchTimer=null,catchSpawn=null,catchScore=0,catchLeft=20;
+function stopCatch(){if(catchTimer)clearInterval(catchTimer);if(catchSpawn)clearInterval(catchSpawn);catchTimer=catchSpawn=null}
+function spawnHeart(){const area=$('catchArea');const b=document.createElement('button');b.className='heart-target';b.textContent=pick(['💗','💖','💕','🍊']);b.style.left=Math.floor(Math.random()*82)+'%';b.style.top=Math.floor(Math.random()*72)+'%';b.setAttribute('aria-label','Catch heart');b.addEventListener('click',()=>{if(catchLeft<=0)return;catchScore++;$('catchStatus').textContent='Hearts: '+catchScore+' · Time: '+catchLeft+'s';b.remove()});area.appendChild(b);setTimeout(()=>b.remove(),1300)}
+function startCatch(){stopCatch();catchScore=0;catchLeft=20;$('catchArea').textContent='';$('catchGame').classList.remove('hidden');$('catchStatus').textContent='Hearts: 0 · Time: 20s';spawnHeart();catchSpawn=setInterval(spawnHeart,700);catchTimer=setInterval(()=>{catchLeft--;if(catchLeft<=0){catchLeft=0;stopCatch();$('catchStatus').textContent='Time! You caught '+catchScore+' hearts. SweetP says: lovely effort, hon. ♡';$('reactionMessage').textContent='You collected '+catchScore+' hearts. SweetP is cheering for you!';$('catchArea').querySelectorAll('button').forEach(b=>b.remove());return}$('catchStatus').textContent='Hearts: '+catchScore+' · Time: '+catchLeft+'s'},1000)}
+$('catchStart').addEventListener('click',startCatch);$('catchReset').addEventListener('click',startCatch);
+function init(){greeting();renderMoods();const settings=safeGet('capyreminders.settings');if(settings){try{const s=JSON.parse(settings);$('customGreeting').value=s.greetingText||$('customGreeting').value;$('customName').value=s.name||$('customName').value;if(s.greetingText)$('greetingText').textContent=s.greetingText;document.querySelector('.hero h1').textContent='Hi, '+(s.name||'Capydaddy Ken')+'. ♡'}catch(e){}}const last=safeGet('capyreminders.lastMood');if(last){try{const saved=JSON.parse(last);const d=new Date(saved.date);if(saved.mood&&d.toDateString()===new Date().toDateString())$('saveStatus').textContent='Last mood saved today: '+saved.mood+'. Choose a mood above to check in again.'}catch(e){}}}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)greeting()});init();
+})();
 </script>
 </body>
 </html>
