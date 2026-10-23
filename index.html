@@ -3,33 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#050b08">
+  <meta name="theme-color" content="#080b18" id="themeColorMeta">
   <title>Morning Protocol</title>
   <style>
-    :root { color-scheme: dark; --green:#59ff9a; --dim:#8aa895; --panel:#0a1510; }
+    :root { color-scheme: dark; --accent:#9caeff; --dim:#a5add0; --panel:#0a0d1c; --edge:#38436e; --glow:#7c8cff12; --bg:#080b18; --card:#0c1021; --text:#e7eaff; --muted:#b6bedf; }
     * { box-sizing:border-box; }
-    body { margin:0; min-height:100vh; background:radial-gradient(ellipse at top,#10251a 0%,#050b08 55%); color:#d9f7e3; font:16px/1.6 Consolas,Monaco,"Courier New",monospace; display:grid; place-items:center; padding:24px; }
-    main { width:min(720px,100%); border:1px solid #28583b; background:rgba(5,13,8,.94); box-shadow:0 0 35px #1aff6b12; }
-    header { padding:14px 20px; border-bottom:1px solid #28583b; display:flex; justify-content:space-between; gap:12px; color:var(--dim); font-size:12px; letter-spacing:.12em; }
-    .dot { color:var(--green); }
+    body { margin:0; min-height:100vh; background:radial-gradient(ellipse at top,var(--card) 0%,var(--bg) 60%); color:var(--text); font:16px/1.6 Consolas,Monaco,"Courier New",monospace; display:grid; place-items:center; padding:24px; }
+    main { width:min(720px,100%); border:1px solid var(--edge); background:var(--bg); box-shadow:0 0 35px var(--glow); }
+    header { padding:14px 20px; border-bottom:1px solid var(--edge); display:flex; justify-content:space-between; gap:12px; color:var(--dim); font-size:12px; letter-spacing:.12em; }
+    .dot { color:var(--accent); }
     section { padding:clamp(22px,5vw,42px); }
-    .eyebrow { color:var(--green); font-size:12px; letter-spacing:.18em; }
-    h1 { font-size:clamp(30px,7vw,48px); line-height:1.1; margin:12px 0; color:#effff4; }
-    p { color:#b2cdbb; }
+    .eyebrow { color:var(--accent); font-size:12px; letter-spacing:.18em; }
+    h1 { font-size:clamp(30px,7vw,48px); line-height:1.1; margin:12px 0; color:var(--text); }
+    p { color:var(--muted); }
     .rule { border:0; border-top:1px dashed #28583b; margin:26px 0; }
-    .terminal { background:#07100b; border:1px solid #1d3e2a; padding:18px; margin:20px 0; }
-    .question { color:#e4ffec; margin:0 0 12px; }
+    .terminal { background:var(--card); border:1px solid var(--edge); padding:18px; margin:20px 0; }
+    .question { color:var(--text); margin:0 0 12px; }
     .choices { display:grid; gap:10px; }
-    button { font:inherit; cursor:pointer; color:var(--green); background:#0b1b11; border:1px solid #2e6b43; padding:12px 14px; text-align:left; transition:.15s ease; }
-    button:hover,button:focus-visible { background:#12311d; border-color:var(--green); outline:none; }
+    button, select { font:inherit; cursor:pointer; color:var(--accent); background:var(--card); border:1px solid var(--edge); padding:10px 12px; text-align:left; transition:.15s ease; }
+    button:hover,button:focus-visible,select:focus-visible { background:var(--card); border-color:var(--accent); outline:none; }
     button:disabled { opacity:.55; cursor:default; }
-    input { width:100%; padding:12px; margin-top:8px; color:var(--green); background:#050b08; border:1px solid #2e6b43; font:inherit; }
-    .status { min-height:26px; color:var(--green); font-size:13px; margin-top:12px; }
+    input { width:100%; padding:12px; margin-top:8px; color:var(--accent); background:var(--bg); border:1px solid var(--edge); font:inherit; }
+    .status { min-height:26px; color:var(--accent); font-size:13px; margin-top:12px; }
     .hidden { display:none; }
-    .message { border:1px solid #2e6b43; padding:22px; background:#09170e; white-space:pre-wrap; }
-    .message h2 { color:var(--green); margin-top:0; }
+    .message { border:1px solid var(--edge); padding:22px; background:var(--card); white-space:pre-wrap; }
+    .message h2 { color:var(--accent); margin-top:0; }
     .small { font-size:12px; color:#789582; }
-    footer { padding:12px 20px; border-top:1px solid #28583b; color:#6f8e7a; font-size:11px; display:flex; justify-content:space-between; gap:10px; }
+    footer { padding:12px 20px; border-top:1px solid var(--edge); color:var(--dim); font-size:11px; display:flex; justify-content:space-between; gap:10px; }\n    .theme-bar { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin:0 0 22px; padding:12px; border:1px solid var(--edge); background:var(--card); font-size:12px; }\n    .theme-bar label { color:var(--dim); }
     @media(max-width:480px) { header,footer { flex-wrap:wrap; } }
   </style>
 </head>
@@ -37,7 +37,7 @@
 <main>
   <header><span><span class="dot">●</span> MORNING-PROTOCOL v1.0</span><span id="clock">SYSTEM ONLINE</span></header>
   <section>
-    <div class="eyebrow">[ PRIVATE TRANSMISSION / ACCESS REQUIRED ]</div>
+    <div class="theme-bar"><label for="themePicker">DAILY COLOR THEME <span id="themeDay"></span></label><select id="themePicker" aria-label="Choose website color theme"><option value="auto">Auto: change daily</option><option value="lavender">Midnight Lavender</option><option value="ocean">Deep Ocean</option><option value="rose">Rose Quartz</option><option value="sunset">Amber Sunset</option><option value="mint">Mint Glow</option></select></div>\n    <div class="eyebrow">[ PRIVATE TRANSMISSION / ACCESS REQUIRED ]</div>
     <h1>A message is waiting.</h1>
     <p>Good morning, Agent. A little message has been locked behind a tiny mystery. Solve the clues to open the transmission.</p>
     <div class="terminal" id="puzzle">
@@ -60,12 +60,12 @@
       <p class="small">Come back tomorrow for another little message. ✦</p>
     </div>
     <hr class="rule">
-    <p class="small">TIP: Read carefully. You can try again if you miss a clue.</p>
+    <p class="small">TIP: Read carefully. You can try again if you miss a clue. Your color theme can change every day, or you can choose one yourself.</p>
   </section>
   <footer><span>ENCRYPTION: HEARTWARE</span><span>STATUS: <span class="dot">● SECURE</span></span></footer>
 </main>
 <script>
-  // CUSTOMIZE YOUR MESSAGES HERE. Add or edit one message for each day of the year (1–365).
+  // COLOR THEMES: auto rotates daily. Choose a theme from the menu to override it.\n  const themes = {\n    lavender: {accent:"#b8a5ff",dim:"#b3acd5",edge:"#514276",glow:"#9b7dff1c",bg:"#0b0918",card:"#151027",text:"#f0eaff",muted:"#c9c0e6"},\n    ocean: {accent:"#69d9ff",dim:"#8ebdcc",edge:"#24546b",glow:"#33cfff18",bg:"#061019",card:"#0a1c29",text:"#e5f8ff",muted:"#b1d4e2"},\n    rose: {accent:"#ff9fcb",dim:"#c99ab3",edge:"#6d3453",glow:"#ff68b518",bg:"#180912",card:"#26101e",text:"#fff0f7",muted:"#e2b9ce"},\n    sunset: {accent:"#ffc078",dim:"#c9a989",edge:"#6d482a",glow:"#ff9d3b18",bg:"#170e08",card:"#27180d",text:"#fff4e7",muted:"#e4c6a7"},\n    mint: {accent:"#72ffd0",dim:"#91cbb7",edge:"#286650",glow:"#35ffbd18",bg:"#06130f",card:"#0b2119",text:"#e5fff5",muted:"#b5e3d2"}\n  };\n  const themeNames = Object.keys(themes);\n  function applyTheme(name) {\n    const chosen = name === "auto" ? themeNames[Math.floor((Date.now() - new Date(new Date().getFullYear(),0,0)) / 86400000) % themeNames.length] : name;\n    const t = themes[chosen] || themes.lavender;\n    for (const [key,value] of Object.entries(t)) document.documentElement.style.setProperty("--"+key,value);\n    document.getElementById("themeColorMeta").content = t.bg;\n    document.getElementById("themeDay").textContent = name === "auto" ? " / TODAY: " + chosen.toUpperCase() : " / CUSTOM";\n  }\n  const themePicker = document.getElementById("themePicker");\n  themePicker.addEventListener("change", () => applyTheme(themePicker.value));\n  applyTheme("auto");\n\n  // CUSTOMIZE YOUR MESSAGES HERE. Add or edit one message for each day of the year (1–365).
   // The page selects a message based on the day of the year.
   const dailyMessages = [
     { title: "A little note for you", body: "Hey, you. 💚\n\nI hope today gives you a reason to smile, even if it is a small one. Take things one step at a time. You do not have to figure everything out all at once.\n\nDrink some water, take a breath, and remember that you matter. Have a gentle day." },
