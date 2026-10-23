@@ -166,18 +166,44 @@ function sphere(parent,x,y,z,sx,sy,sz,color,segments=12){const m=new THREE.Mesh(
 function group(parent,x=0,y=0,z=0){const g=new THREE.Group();g.position.set(x,y,z);parent.add(g);return g;}
 function makeSweetP(){
  const g=group(scene,1,0,1);g.userData={reactUntil:0,reaction:""};
- sphere(g,0,.88,0,.55,.68,.48,0xd7a16f,16);sphere(g,0,1.45,-.02,.52,.49,.45,0xd9a777,16);
- sphere(g,-.36,1.8,-.02,.15,.17,.12,0x8e5c43);sphere(g,.36,1.8,-.02,.15,.17,.12,0x8e5c43);
- sphere(g,0,1.4,.38,.29,.28,.12,0x9b6d51);sphere(g,-.105,1.53,.485,.045,.035,.025,0x30231d);sphere(g,.105,1.53,.485,.045,.035,.025,0x30231d);sphere(g,0,1.43,.5,.045,.035,.025,0x30231d);
- sphere(g,-.25,1.39,.465,.07,.035,.02,0xf1a0a1);sphere(g,.25,1.39,.465,.07,.035,.02,0xf1a0a1);
- /* Permanent white glasses: rims, bridge and temples are always attached to the head. */
- const white=mat(0xfffaf4),black=mat(0x55453d);
- const ringGeo=new THREE.TorusGeometry(.115,.022,6,16);
- const l=new THREE.Mesh(ringGeo,white);l.position.set(-.13,1.55,.49);g.add(l);const r=new THREE.Mesh(ringGeo,white);r.position.set(.13,1.55,.49);g.add(r);
- cube(g,0,1.55,.5,.09,.025,.025,0xfffaf4);cube(g,-.29,1.56,.42,.12,.025,.025,0xfffaf4);cube(g,.29,1.56,.42,.12,.025,.025,0xfffaf4);
- sphere(g,0,1.98,.01,.14,.14,.14,0xf4a23b);sphere(g,-.035,2.035,.1,.035,.025,.025,0x6b9b53);
- /* little feet */
- sphere(g,-.3,.25,.15,.19,.15,.24,0x9c6a49);sphere(g,.3,.25,.15,.19,.15,.24,0x9c6a49);
+ /* SweetP is styled after your reference: extra-chubby, warm caramel fur,
+    cream tummy, sleepy smile, white round glasses, and her signature orange. */
+ const fur=0xd9a06b, furLight=0xe2b17e, muzzle=0x956747, cream=0xffead0;
+ sphere(g,0,.88,0,.68,.77,.56,fur,18);                 // round chubby body
+ sphere(g,0,.88,.445,.43,.52,.16,cream,16);           // pale tummy
+ sphere(g,0,1.49,-.01,.61,.57,.52,furLight,18);       // big round head
+ sphere(g,-.43,1.82,-.01,.17,.2,.14,0xb98258,12);     // left ear
+ sphere(g,.43,1.82,-.01,.17,.2,.14,0xb98258,12);      // right ear
+ sphere(g,-.43,1.83,.085,.095,.12,.035,0xe0ad87,10);
+ sphere(g,.43,1.83,.085,.095,.12,.035,0xe0ad87,10);
+ sphere(g,0,1.39,.435,.32,.29,.17,muzzle,16);         // soft brown snout
+ sphere(g,-.105,1.48,.579,.035,.045,.025,0x35251c,8);
+ sphere(g,.105,1.48,.579,.035,.045,.025,0x35251c,8);
+ sphere(g,0,1.34,.594,.035,.025,.02,0x35251c,8);     // tiny nose
+ /* Closed, sleepy curved eyes, so she keeps the sweet expression in the reference. */
+ const eyeMat=mat(0x4b3026);
+ const eyeGeo=new THREE.TorusGeometry(.105,.018,5,12,Math.PI);
+ const eyeL=new THREE.Mesh(eyeGeo,eyeMat);eyeL.position.set(-.22,1.61,.48);eyeL.rotation.z=Math.PI;g.add(eyeL);
+ const eyeR=new THREE.Mesh(eyeGeo,eyeMat);eyeR.position.set(.22,1.61,.48);eyeR.rotation.z=Math.PI;g.add(eyeR);
+ sphere(g,-.34,1.4,.49,.095,.045,.025,0xf19c9e,10);
+ sphere(g,.34,1.4,.49,.095,.045,.025,0xf19c9e,10);
+ /* Permanent white-framed glasses. They stay on through every outfit change. */
+ const white=mat(0xfffaf4);
+ const ringGeo=new THREE.TorusGeometry(.145,.018,6,20);
+ const l=new THREE.Mesh(ringGeo,white);l.position.set(-.22,1.59,.51);g.add(l);
+ const r=new THREE.Mesh(ringGeo,white);r.position.set(.22,1.59,.51);g.add(r);
+ cube(g,0,1.59,.525,.09,.022,.022,0xfffaf4);
+ cube(g,-.39,1.6,.43,.13,.025,.025,0xfffaf4);
+ cube(g,.39,1.6,.43,.13,.025,.025,0xfffaf4);
+ /* Tiny arms and toes make her silhouette softer and more capybara-like. */
+ sphere(g,-.48,.94,.24,.19,.3,.2,fur,12).rotation.z=-.45;
+ sphere(g,.48,.94,.24,.19,.3,.2,fur,12).rotation.z=.45;
+ sphere(g,-.34,.22,.2,.2,.14,.25,muzzle,10);
+ sphere(g,.34,.22,.2,.2,.14,.25,muzzle,10);
+ /* Signature orange on top of her head, with a little green leaf. */
+ sphere(g,0,2.13,.015,.19,.18,.18,0xf28c24,14);
+ const stem=cube(g,-.015,2.31,.015,.035,.09,.035,0x648f45);stem.rotation.z=-.15;
+ const leaf=sphere(g,.105,2.34,.015,.14,.045,.07,0x76a84d,10);leaf.rotation.z=-.3;
  return g;
 }
 function dressSweetP(index){
