@@ -35,6 +35,10 @@ button:disabled{opacity:.5;cursor:default}
 .hidden{display:none!important}
 .message{border:1px solid var(--edge);padding:20px;background:var(--card);white-space:pre-wrap}
 .message h2{color:var(--accent);margin-top:0}
+.memory-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;max-width:420px;margin:16px auto}
+.memory-card{aspect-ratio:1;font-size:clamp(18px,5vw,30px);padding:4px;color:var(--accent)}
+#signalButton{display:block;width:100%;min-height:110px;margin:18px auto;font-size:20px;max-width:420px}
+.game-title{color:var(--accent);font-size:13px;letter-spacing:.12em;margin-top:12px}
 .small{font-size:12px;color:var(--dim)}
 @media(min-width:600px){.game-layout{display:grid;grid-template-columns:1fr 170px;gap:18px;align-items:center}.controls{margin:14px auto}}
 </style>
@@ -44,26 +48,28 @@ button:disabled{opacity:.5;cursor:default}
 <header><span><span class="dot">●</span> MORNING-PROTOCOL v1.1</span><span id="clock">SYSTEM ONLINE</span></header>
 <section>
 <div class="theme-bar"><label for="themePicker">DAILY COLOR THEME <span id="themeDay"></span></label><select id="themePicker" aria-label="Choose website color theme"><option value="auto">Auto: change daily</option><option value="lavender">Midnight Lavender</option><option value="ocean">Deep Ocean</option><option value="rose">Rose Quartz</option><option value="sunset">Amber Sunset</option><option value="mint">Mint Glow</option></select></div>
-<div class="eyebrow">[ MINI ADVENTURE / SIGNAL LOST ]</div>
-<h1>The Lost Signal</h1>
-<p>Agent, the signal is buried deep inside a shifting maze. Find the <span class="dot">◆ key</span>, then reach the <span class="dot">▣ exit</span>. Visibility is limited, so explore carefully. Only a successful escape unlocks your message.</p>
+<div class="eyebrow">[ DAILY MINI-GAME / SIGNAL LOST ]</div>
+<h1 id="gameHeading">The Lost Signal</h1>
+<p id="gameDescription">Agent, the signal is buried deep inside a shifting maze. Find the <span class="dot">◆ key</span>, then reach the <span class="dot">▣ exit</span>. Only a win unlocks your message. The game changes daily.</p>
 <div class="panel">
-<div class="game-info"><span>KEY: <strong id="keyState">NOT FOUND</strong></span><span>MOVES: <strong id="moves">0</strong></span><span>MODE: HARD</span></div>
+<div class="game-info"><span id="statOne">KEY: <strong id="keyState">NOT FOUND</strong></span><span id="statTwo">MOVES: <strong id="moves">0</strong></span><span>DAILY GAME: <strong id="modeName">MAZE</strong></span></div>
 <div class="game-layout">
 <div>
 <div id="maze" role="img" aria-label="Maze game grid"></div>
+<div id="memoryGame" class="hidden"><p>Match every pair to restore the signal.</p><div id="memoryGrid" class="memory-grid"></div></div>
+<div id="reactionGame" class="hidden"><p id="reactionHint">Start when you are ready. Wait for the signal to turn green, then tap as quickly as you can.</p><button id="signalButton">START SIGNAL TEST</button></div>
 <div class="status" id="status" aria-live="polite">> Use arrow keys or WASD to move. Find the key!</div>
 </div>
 <div>
 <p class="small">CONTROLS</p>
-<p class="small">Desktop: arrow keys or W A S D</p><p class="small">Only nearby tiles are visible. The maze changes whenever you restart.</p>
+<p class="small">Desktop: arrow keys or W A S D</p><p class="small" id="gameInstructions">Only nearby tiles are visible. Find the key and escape.</p>
 <div class="controls" aria-label="Touch controls">
 <button class="up" data-move="0,-1" aria-label="Move up">▲</button>
 <button class="left" data-move="-1,0" aria-label="Move left">◀</button>
 <button class="down" data-move="0,1" aria-label="Move down">▼</button>
 <button class="right" data-move="1,0" aria-label="Move right">▶</button>
 </div>
-<button id="restart" style="width:100%;text-align:center">Restart maze</button>
+<button id="restart" style="width:100%;text-align:center">Restart game</button>
 </div>
 </div>
 </div>
@@ -103,6 +109,10 @@ const dailyMessages=[
  {title:"Transmission received",body:"A small reminder from this side of the screen: I hope something unexpectedly good finds you today. You deserve moments of peace, laughter, and rest."}
 ];
 const WIDTH=21,HEIGHT=15;
+const dayNumber=Math.floor((new Date()-new Date(new Date().getFullYear(),0,0))/86400000);
+const gameTypes=["maze","memory","reaction"];
+const gameType=gameTypes[(dayNumber-1)%gameTypes.length];
+let memoryDeck=[],memoryOpen=[],memoryMatched=[],memoryLocked=false,reactionState="ready",reactionStart=0,reactionTimer=null;
 const mazeEl=document.getElementById("maze");
 const statusEl=document.getElementById("status");
 let grid=[],player={x:1,y:1},key={x:WIDTH-4,y:HEIGHT-2},exit={x:WIDTH-2,y:HEIGHT-2},hasKey=false,moves=0,won=false;
@@ -132,8 +142,57 @@ function farthestFrom(start){
  }
  return far;
 }
+function setupDailyGame(){
+ const maze=gameType==="maze";
+ document.getElementById("gameHeading").textContent=maze?"The Lost Signal":gameType==="memory"?"Signal Match":"Signal Reflex";
+ document.getElementById("modeName").textContent=maze?"HARD MAZE":gameType==="memory"?"MEMORY MATCH":"REACTION TEST";
+ document.getElementById("gameDescription").textContent=maze?"Find the ◆ key, then reach the ▣ exit. Visibility is limited. Win to unlock your message.":gameType==="memory"?"Flip the cards and match all six pairs. Remember their positions to restore the signal.":"Start the test, wait for the signal to turn green, then click as fast as you can. Clicking too early resets the test.";
+ document.getElementById("maze").classList.toggle("hidden",!maze);
+ document.getElementById("memoryGame").classList.toggle("hidden",gameType!=="memory");
+ document.getElementById("reactionGame").classList.toggle("hidden",gameType!=="reaction");
+ document.querySelector(".controls").classList.toggle("hidden",!maze);
+ document.getElementById("gameInstructions").textContent=maze?"Only nearby tiles are visible. Find the key and escape.":gameType==="memory"?"Six pairs. Match them all without giving up.":"Patience is part of the challenge. Wait for green.";
+ document.getElementById("statOne").classList.toggle("hidden",gameType!=="maze");
+ document.getElementById("statTwo").classList.toggle("hidden",gameType!=="maze");
+}
+function setupMemory(){
+ const symbols=["✦","☾","♡","♢","☀","♫"];
+ memoryDeck=[...symbols,...symbols].sort(()=>Math.random()-.5);memoryOpen=[];memoryMatched=[];memoryLocked=false;
+ const host=document.getElementById("memoryGrid");host.innerHTML="";
+ memoryDeck.forEach((symbol,i)=>{const b=document.createElement("button");b.className="memory-card";b.textContent="?";b.dataset.index=String(i);b.setAttribute("aria-label","Hidden card");b.addEventListener("click",()=>flipCard(i,b));host.appendChild(b);});
+}
+function flipCard(i,b){
+ if(won||memoryLocked||memoryMatched.includes(i)||memoryOpen.some(x=>x.i===i))return;
+ b.textContent=memoryDeck[i];b.setAttribute("aria-label",memoryDeck[i]);memoryOpen.push({i,b});
+ if(memoryOpen.length===2){moves++;document.getElementById("moves").textContent=String(moves);memoryLocked=true;
+  if(memoryDeck[memoryOpen[0].i]===memoryDeck[memoryOpen[1].i]){memoryMatched.push(...memoryOpen.map(x=>x.i));memoryOpen=[];memoryLocked=false;statusEl.textContent="> Pair found! "+(memoryMatched.length/2)+" of 6 pairs.";if(memoryMatched.length===memoryDeck.length)winGame();}
+  else{const pair=memoryOpen.slice();setTimeout(()=>{if(!won)pair.forEach(x=>{x.b.textContent="?";x.b.setAttribute("aria-label","Hidden card");});memoryOpen=[];memoryLocked=false;},650);statusEl.textContent="> Not a match. Remember their positions.";}
+ }
+}
+function startReaction(){
+ const b=document.getElementById("signalButton");clearTimeout(reactionTimer);reactionState="waiting";b.disabled=true;b.textContent="WAIT FOR GREEN…";b.style.background="var(--card)";document.getElementById("reactionHint").textContent="Stay ready. Do not click until the signal changes.";
+ reactionTimer=setTimeout(()=>{if(won)return;reactionState="go";reactionStart=Date.now();b.disabled=false;b.textContent="CLICK NOW!";b.style.background="#176b42";},1200+Math.random()*2600);
+}
+document.getElementById("signalButton").addEventListener("click",()=>{
+ const b=document.getElementById("signalButton");
+ if(reactionState==="ready"){startReaction();return;}
+ if(reactionState==="waiting"){clearTimeout(reactionTimer);reactionState="ready";b.disabled=false;b.textContent="TOO EARLY — TRY AGAIN";b.style.background="var(--card)";statusEl.textContent="> False start. Patience, agent.";document.getElementById("reactionHint").textContent="You clicked too early. Start again and wait for green.";return;}
+ if(reactionState==="go"){const elapsed=Date.now()-reactionStart;reactionState="ready";b.textContent=elapsed+" ms — PLAY AGAIN";b.style.background="var(--card)";document.getElementById("reactionHint").textContent="Reaction time: "+elapsed+" ms. Signal restored!";statusEl.textContent="> Signal caught in "+elapsed+" ms.";winGame();}
+});
 function resetGame(){
+ clearTimeout(reactionTimer);won=false;moves=0;document.getElementById("moves").textContent="0";setupDailyGame();
+ document.getElementById("unlock").classList.add("hidden");
+ statusEl.textContent="> Daily challenge ready. Complete it to unlock your message.";
+ if(gameType==="maze"){
  grid=generateMaze();player={x:1,y:1};exit=farthestFrom(player);key=farthestFrom(exit);
+ if(key.x===exit.x&&key.y===exit.y)key=farthestFrom(player);
+ hasKey=false;document.getElementById("keyState").textContent="NOT FOUND";renderMaze();
+ }else if(gameType==="memory"){
+ document.getElementById("keyState").textContent="—";setupMemory();
+ }else{
+ document.getElementById("keyState").textContent="—";reactionState="ready";const b=document.getElementById("signalButton");b.disabled=false;b.textContent="START SIGNAL TEST";b.style.background="var(--card)";document.getElementById("reactionHint").textContent="Start when ready. Wait for green, then click as quickly as possible.";
+ }
+}
  if(key.x===exit.x&&key.y===exit.y)key=farthestFrom(player);
  hasKey=false;moves=0;won=false;
  document.getElementById("unlock").classList.add("hidden");
@@ -156,7 +215,7 @@ function renderMaze(){
  }));
 }
 function move(dx,dy){
- if(won)return;
+ if(won||gameType!=="maze")return;
  const nx=player.x+dx,ny=player.y+dy;
  if(ny<0||ny>=HEIGHT||nx<0||nx>=WIDTH||grid[ny][nx]==="#"){statusEl.textContent="> Blocked. Try another path.";return;}
  player={x:nx,y:ny};moves++;document.getElementById("moves").textContent=String(moves);
@@ -168,10 +227,10 @@ function move(dx,dy){
  renderMaze();
 }
 function winGame(){
- won=true;statusEl.textContent="> SIGNAL RESTORED. TRANSMISSION UNLOCKED.";
+ if(won)return;
+ won=true;clearTimeout(reactionTimer);statusEl.textContent="> SIGNAL RESTORED. TRANSMISSION UNLOCKED.";
  document.getElementById("unlock").classList.remove("hidden");
- const day=Math.floor((new Date()-new Date(new Date().getFullYear(),0,0))/86400000);
- const msg=dailyMessages[(day-1)%dailyMessages.length];
+ const msg=dailyMessages[(dayNumber-1)%dailyMessages.length];
  document.getElementById("messageTitle").textContent=msg.title;
  document.getElementById("messageBody").textContent=msg.body;
  renderMaze();
