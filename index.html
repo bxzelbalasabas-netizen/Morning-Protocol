@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#050b08">
+  <title>Morning Protocol</title>
+  <style>
+    :root { color-scheme: dark; --green:#59ff9a; --dim:#8aa895; --panel:#0a1510; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; background:radial-gradient(ellipse at top,#10251a 0%,#050b08 55%); color:#d9f7e3; font:16px/1.6 Consolas,Monaco,"Courier New",monospace; display:grid; place-items:center; padding:24px; }
+    main { width:min(720px,100%); border:1px solid #28583b; background:rgba(5,13,8,.94); box-shadow:0 0 35px #1aff6b12; }
+    header { padding:14px 20px; border-bottom:1px solid #28583b; display:flex; justify-content:space-between; gap:12px; color:var(--dim); font-size:12px; letter-spacing:.12em; }
+    .dot { color:var(--green); }
+    section { padding:clamp(22px,5vw,42px); }
+    .eyebrow { color:var(--green); font-size:12px; letter-spacing:.18em; }
+    h1 { font-size:clamp(30px,7vw,48px); line-height:1.1; margin:12px 0; color:#effff4; }
+    p { color:#b2cdbb; }
+    .rule { border:0; border-top:1px dashed #28583b; margin:26px 0; }
+    .terminal { background:#07100b; border:1px solid #1d3e2a; padding:18px; margin:20px 0; }
+    .question { color:#e4ffec; margin:0 0 12px; }
+    .choices { display:grid; gap:10px; }
+    button { font:inherit; cursor:pointer; color:var(--green); background:#0b1b11; border:1px solid #2e6b43; padding:12px 14px; text-align:left; transition:.15s ease; }
+    button:hover,button:focus-visible { background:#12311d; border-color:var(--green); outline:none; }
+    button:disabled { opacity:.55; cursor:default; }
+    input { width:100%; padding:12px; margin-top:8px; color:var(--green); background:#050b08; border:1px solid #2e6b43; font:inherit; }
+    .status { min-height:26px; color:var(--green); font-size:13px; margin-top:12px; }
+    .hidden { display:none; }
+    .message { border:1px solid #2e6b43; padding:22px; background:#09170e; white-space:pre-wrap; }
+    .message h2 { color:var(--green); margin-top:0; }
+    .small { font-size:12px; color:#789582; }
+    footer { padding:12px 20px; border-top:1px solid #28583b; color:#6f8e7a; font-size:11px; display:flex; justify-content:space-between; gap:10px; }
+    @media(max-width:480px) { header,footer { flex-wrap:wrap; } }
+  </style>
+</head>
+<body>
+<main>
+  <header><span><span class="dot">●</span> MORNING-PROTOCOL v1.0</span><span id="clock">SYSTEM ONLINE</span></header>
+  <section>
+    <div class="eyebrow">[ PRIVATE TRANSMISSION / ACCESS REQUIRED ]</div>
+    <h1>A message is waiting.</h1>
+    <p>Good morning, Agent. A little message has been locked behind a tiny mystery. Solve the clues to open the transmission.</p>
+    <div class="terminal" id="puzzle">
+      <div class="eyebrow" id="stage">CASE FILE 01 / 03</div>
+      <p class="question" id="question">A message can travel without feet, and arrive without moving. What carries it?</p>
+      <div class="choices" id="choices">
+        <button data-answer="wind">A. The wind</button>
+        <button data-answer="signal">B. A signal</button>
+        <button data-answer="shadow">C. A shadow</button>
+      </div>
+      <div class="status" id="status" aria-live="polite">> Awaiting your answer...</div>
+    </div>
+    <div id="unlock" class="hidden">
+      <div class="eyebrow">[ IDENTITY VERIFIED ]</div>
+      <p class="dot">> TRANSMISSION DECRYPTED</p>
+      <div class="message">
+        <h2 id="messageTitle">A little note for you</h2>
+        <div id="messageBody"></div>
+      </div>
+      <p class="small">Come back tomorrow for another little message. ✦</p>
+    </div>
+    <hr class="rule">
+    <p class="small">TIP: Read carefully. You can try again if you miss a clue.</p>
+  </section>
+  <footer><span>ENCRYPTION: HEARTWARE</span><span>STATUS: <span class="dot">● SECURE</span></span></footer>
+</main>
+<script>
+  // CUSTOMIZE YOUR MESSAGES HERE. Add or edit one message for each day of the year (1–365).
+  // The page selects a message based on the day of the year.
+  const dailyMessages = [
+    { title: "A little note for you", body: "Hey, you. 💚\n\nI hope today gives you a reason to smile, even if it is a small one. Take things one step at a time. You do not have to figure everything out all at once.\n\nDrink some water, take a breath, and remember that you matter. Have a gentle day." },
+    { title: "Today's reminder", body: "You are allowed to grow at your own pace. Progress does not have to be loud to be real.\n\nBe kind to yourself today. You are doing better than you think. ✦" },
+    { title: "Transmission received", body: "A small reminder from this side of the screen: I hope something unexpectedly good finds you today. You deserve moments of peace, laughter, and rest." }
+  ];
+  const puzzles = [
+    { q: "A message can travel without feet, and arrive without moving. What carries it?", options: [["wind","A. The wind"],["signal","B. A signal"],["shadow","C. A shadow"]], answer:"signal", hint:"Think of something sent from one device to another." },
+    { q: "I have keys but no locks, and space but no room. What am I?", options: [["keyboard","A. A keyboard"],["map","B. A map"],["piano","C. A piano"]], answer:"keyboard", hint:"You might be using one right now." },
+    { q: "The more you take from me, the bigger I become. What am I?", options: [["hole","A. A hole"],["secret","B. A secret"],["shadow","C. A shadow"]], answer:"hole", hint:"Imagine digging into the ground." }
+  ];
+  let stage = 0;
+  const question = document.getElementById("question");
+  const choices = document.getElementById("choices");
+  const status = document.getElementById("status");
+  const stageLabel = document.getElementById("stage");
+  function renderPuzzle() {
+    const p = puzzles[stage];
+    stageLabel.textContent = "CASE FILE " + String(stage + 1).padStart(2,"0") + " / " + String(puzzles.length).padStart(2,"0");
+    question.textContent = p.q;
+    choices.innerHTML = "";
+    p.options.forEach(([value,label]) => {
+      const b = document.createElement("button");
+      b.textContent = label;
+      b.addEventListener("click", () => checkAnswer(value));
+      choices.appendChild(b);
+    });
+    status.textContent = "> Awaiting your answer...";
+  }
+  function checkAnswer(value) {
+    if (value !== puzzles[stage].answer) {
+      status.textContent = "> ACCESS DENIED. " + puzzles[stage].hint;
+      return;
+    }
+    stage++;
+    if (stage < puzzles.length) {
+      status.textContent = "> Correct. Loading next case...";
+      renderPuzzle();
+    } else {
+      document.getElementById("puzzle").classList.add("hidden");
+      document.getElementById("unlock").classList.remove("hidden");
+      const day = Math.floor((new Date() - new Date(new Date().getFullYear(),0,0)) / 86400000);
+      const msg = dailyMessages[(day - 1) % dailyMessages.length];
+      document.getElementById("messageTitle").textContent = msg.title;
+      document.getElementById("messageBody").textContent = msg.body;
+    }
+  }
+  document.getElementById("clock").textContent = new Date().toLocaleDateString(undefined,{year:"numeric",month:"short",day:"2-digit"}).toUpperCase();
+  renderPuzzle();
+</script>
+</body>
+</html>
