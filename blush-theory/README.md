@@ -1,4 +1,4 @@
-# Blush Theory Studio — Burgundy Beauty Shop
+# ur_bxzl's Beauty Studio — Burgundy Beauty Shop
 
 A responsive, single-file storefront concept for digital beauty guides, using burgundy, rose, and cream styling.
 
@@ -22,3 +22,9 @@ If that URL does not load, check Settings → Pages and select the main branch a
 - Review commercial-use rights for all photos, fonts, and design assets.
 
 The current cart and signup form are UI demos only. They do not process payments, collect/store email addresses, or deliver files.
+
+
+## Brand and portrait update
+The storefront is now branded **ur_bxzl's Beauty Studio** with a burgundy editorial direction. The hero image references `model.jpg` in this folder. Upload the user's chosen portrait to this exact path (`blush-theory/model.jpg`) in GitHub to make the image appear on the live site. Use the provided portrait as-is or with only subtle color correction; avoid face reshaping or skin-smoothing. The image is not yet committed as a repository asset, so the hero will remain blank until `model.jpg` is uploaded.
+
+Checkout, email signup, and product delivery remain demo-only until connected to real services.
